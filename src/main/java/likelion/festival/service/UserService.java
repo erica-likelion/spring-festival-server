@@ -19,6 +19,10 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("Connot find user with given id"));
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Connot find user with given email"));
+    }
+
     @Transactional
     public User save(String email, String name) {
         return userRepository.save(

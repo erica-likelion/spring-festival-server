@@ -1,12 +1,15 @@
 package likelion.festival.utils;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import likelion.festival.domain.User;
+import likelion.festival.exceptions.JwtTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +17,14 @@ import java.util.Map;
 @Component
 public class JwtTokenUtils {
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-    @Value("${jwt.expire-time}")
+    private final Key key;
+
     private long expirationTime;
+
+    public JwtTokenUtils(@Value("${jwt.secret-key}") String secretKey, @Value("${jwt.expire-time}") long expirationTime) {
+        this.expirationTime = expirationTime;
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
 
     public String generateAccessToken(User user) {
         Date now = new Date();
@@ -29,7 +36,7 @@ public class JwtTokenUtils {
                 .setIssuedAt(now)
                 .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -42,8 +49,34 @@ public class JwtTokenUtils {
                 .setIssuedAt(now)
                 .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            throw new JwtTokenException("Invalid JWT token");
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException("Expired JWT token");
+        } catch (UnsupportedJwtException e) {
+            throw new JwtTokenException("Unsupported JWT token");
+        } catch (IllegalArgumentException e) {
+            throw new JwtTokenException("Invalid JWT token");
+        }
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Map<String, Object> createHeader() {
