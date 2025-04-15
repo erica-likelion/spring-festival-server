@@ -7,20 +7,30 @@ import likelion.festival.dto.KakaoUserInfo;
 import likelion.festival.repository.UserRepository;
 import likelion.festival.utils.JwtTokenUtils;
 import likelion.festival.utils.KakaoUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
     private final KakaoUtils kakaoUtils;
     private final UserRepository userRepository;
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
-    @Value("${jwt.refresh-token-expire-time}")
-    private Integer maxAge;
+    private final Integer maxAge;
 
+    public AuthService(
+            KakaoUtils kakaoUtils,
+            UserRepository userRepository,
+            UserService userService,
+            JwtTokenUtils jwtTokenUtils,
+            @Value("${jwt.refresh-token-expire-time}") Integer maxAge
+    ) {
+        this.kakaoUtils = kakaoUtils;
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.jwtTokenUtils = jwtTokenUtils;
+        this.maxAge = maxAge;
+    }
 
     public void doLoginProcess(String code, HttpServletResponse response) {
         String accessToken = kakaoUtils.getAccessToken(code);
