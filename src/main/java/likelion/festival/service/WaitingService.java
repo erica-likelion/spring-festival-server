@@ -5,6 +5,7 @@ import likelion.festival.domain.User;
 import likelion.festival.domain.Waiting;
 import likelion.festival.dto.WaitingRequestDto;
 import likelion.festival.dto.WaitingResponseDto;
+import likelion.festival.exceptions.WaitingException;
 import likelion.festival.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,10 @@ public class WaitingService {
     private final PubService pubService;
 
     @Transactional
-    public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto) {
+    public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto){
         List<Waiting> waitingList = user.getWaitingList();
         if (waitingList.size() > 3) {
-            throw new IllegalArgumentException("");
+            throw new WaitingException("Waiting list is full");
         }
 
         Pub pub = pubService.getPubById(waitingRequestDto.getPubId());
