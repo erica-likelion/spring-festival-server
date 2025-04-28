@@ -24,6 +24,8 @@ public class LostItem {
 
     private String foundLocation;
 
+    private String foundDate;
+
     private String foundTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
