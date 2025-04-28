@@ -5,12 +5,10 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class WaitingRequestDto {
+public class GuestWaitingRequestDto {
+    private Long pubId;
+
     private Integer visitorCount;
 
     private String phoneNumber;
-
-    private String pubName;
-
-    private Long pubId;
 }

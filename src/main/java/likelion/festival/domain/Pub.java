@@ -20,8 +20,15 @@ public class Pub {
 
     private Integer enterNum;
 
-    private Integer waitingNum;
+    private Integer maxWaitingNum;
 
     @OneToMany(mappedBy = "pub", cascade = CascadeType.REMOVE)
     private List<Waiting> waitingList;
+
+    @OneToMany(mappedBy = "pub", cascade = CascadeType.REMOVE)
+    private List<GuestWaiting> guestWaitingList;
+
+    public Integer addWaitingNum() {
+        return maxWaitingNum + 1;
+    }
 }

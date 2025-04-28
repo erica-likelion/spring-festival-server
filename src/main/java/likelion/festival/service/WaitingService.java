@@ -3,6 +3,8 @@ package likelion.festival.service;
 import likelion.festival.domain.Pub;
 import likelion.festival.domain.User;
 import likelion.festival.domain.Waiting;
+import likelion.festival.dto.AdminWaitingList;
+import likelion.festival.dto.MyWaitingList;
 import likelion.festival.dto.WaitingRequestDto;
 import likelion.festival.dto.WaitingResponseDto;
 import likelion.festival.exceptions.WaitingException;
@@ -31,9 +33,9 @@ public class WaitingService {
         validateDuplicatedWaiting(waitingList, pub);
 
 
-        Waiting waiting = save(waitingRequestDto, pub.getWaitingNum() + 1, user, pub);
+        Waiting waiting = save(waitingRequestDto, pub.getMaxWaitingNum() + 1, user, pub);
         return new WaitingResponseDto(waiting.getWaitingNum(),
-                pub.getWaitingNum() - pub.getEnterNum()
+                pub.getMaxWaitingNum() - pub.getEnterNum()
         );
     }
 
@@ -45,6 +47,19 @@ public class WaitingService {
                 waitingNum,
                 user,
                 pub));
+    }
+
+    @Transactional
+    public void deleteWaiting(Integer waitingNum) {
+        waitingRepository.deleteByWaitingNum(waitingNum);
+    }
+
+    public List<MyWaitingList> getWaitingList(User user) {
+        return waitingRepository.findWaitingListByUserId(user.getId());
+    }
+
+    public List<AdminWaitingList> getAdminWaitingList(Long pubId) {
+        return waitingRepository.findWaitingsByPubId(pubId);
     }
 
     private void validateDuplicatedWaiting(List<Waiting> waitingList, Pub pub) {
