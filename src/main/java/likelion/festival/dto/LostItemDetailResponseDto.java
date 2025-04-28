@@ -1,30 +1,24 @@
-package likelion.festival.domain;
+package likelion.festival.dto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import likelion.festival.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
-@NoArgsConstructor
-public class LostItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@AllArgsConstructor
+public class LostItemResponseDto {
     private Long id;
-
     private String image;
-
     private String name;
-
     private String description;
-
     private Boolean staffNotified;
-
     private String foundLocation;
-
-    private String foundTime;
+    private LocalDateTime foundTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
