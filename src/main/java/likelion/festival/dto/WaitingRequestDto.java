@@ -13,6 +13,4 @@ public class WaitingRequestDto {
     private String pubName;
 
     private Long pubId;
-
-    private Long userId;
 }

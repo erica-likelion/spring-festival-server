@@ -1,5 +1,6 @@
 package likelion.festival.controller;
 
+import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.User;
 import likelion.festival.domain.Waiting;
 import likelion.festival.dto.WaitingRequestDto;
@@ -9,6 +10,8 @@ import likelion.festival.service.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +24,9 @@ public class WaitingController {
 
     @PostMapping("/api/waitings")
     public WaitingResponseDto makeWaiting(@RequestBody WaitingRequestDto waitingRequestDto) {
-        User user = userService.getUserById(waitingRequestDto.getUserId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userService.getUserByEmail(userDetails.getUsername());
 
         return waitingService.addWaiting(user, waitingRequestDto);
     }
