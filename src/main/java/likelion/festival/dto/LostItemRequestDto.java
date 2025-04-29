@@ -20,10 +20,4 @@ public class LostItemRequestDto {
     private String foundDate;
     private String foundTime;
     private Long userId;
-
-    public LostItem save() {
-        return new LostItem(
-                this.name
-        );
-    }
 }
