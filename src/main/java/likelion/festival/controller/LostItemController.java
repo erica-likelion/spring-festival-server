@@ -7,6 +7,7 @@ import likelion.festival.service.LostItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -31,8 +32,10 @@ public class LostItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addLostItem(@RequestBody LostItemRequestDto dto) {
-        LostItem lostItem = lostItemService.addLostItem(dto);
+    public ResponseEntity<Void> addLostItem(@RequestPart("data") LostItemRequestDto dto, @RequestPart("image") MultipartFile image) {
+        System.out.println(dto);
+
+        LostItem lostItem = lostItemService.addLostItem(dto, image);
         URI location =URI.create("/api/lost-items/" + lostItem.getId());
         return ResponseEntity.created(location).build();
     }

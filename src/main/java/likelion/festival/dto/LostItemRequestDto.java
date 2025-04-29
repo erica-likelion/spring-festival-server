@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @AllArgsConstructor
 public class LostItemRequestDto {
-    private MultipartFile image;
+    //private MultipartFile image;
     private String name;
     private String description;
     private Boolean staffNotified;

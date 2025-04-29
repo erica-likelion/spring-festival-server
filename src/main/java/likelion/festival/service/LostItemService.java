@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,11 +35,11 @@ public class LostItemService {
     }
 
     @Transactional
-    public LostItem addLostItem(LostItemRequestDto dto) {
+    public LostItem addLostItem(LostItemRequestDto dto, MultipartFile image) {
         User user = userRepository.findById(dto.getUserId())
                 .orElse(null);
 
-        String imageUrl = imageService.saveImage(dto.getImage());
+        String imageUrl = imageService.saveImage(image);
 
         LostItem lostItem = new LostItem(
                 imageUrl,
