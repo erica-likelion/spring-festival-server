@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/login/kakao/**", "/error").permitAll()
+                        .requestMatchers("/auth/login/kakao/**", "/error", "admin/waiting").permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors

@@ -3,7 +3,6 @@ package likelion.festival.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.dto.AuthCodeRequestDto;
 import likelion.festival.service.AuthService;
-import likelion.festival.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
