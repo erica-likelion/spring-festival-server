@@ -31,4 +31,25 @@ public class LostItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public LostItem(
+            String image,
+            String name,
+            String description,
+            Boolean staffNotified,
+            String foundLocation,
+            String foundDate,
+            String foundTime,
+            User user
+    ) {
+        this.image = image;
+        this.name = name;
+        this.description = description;
+        this.staffNotified = staffNotified;
+        this.foundLocation = foundLocation;
+        this.foundDate = foundDate;
+        this.foundTime = foundTime;
+        this.user = user;
+    }
 }
+

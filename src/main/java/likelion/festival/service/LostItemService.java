@@ -1,8 +1,11 @@
 package likelion.festival.service;
 
 import likelion.festival.domain.LostItem;
+import likelion.festival.domain.User;
 import likelion.festival.dto.LostItemListResponseDto;
+import likelion.festival.dto.LostItemRequestDto;
 import likelion.festival.repository.LostItemRepository;
+import likelion.festival.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LostItemService {
     private final LostItemRepository lostItemRepository;
+    private final UserRepository userRepository;
+    private final ImageService imageService;
 
     public List<LostItemListResponseDto> findByLostDate(String lostDate) {
         List<LostItem> lostItems = lostItemRepository.findByFoundDate(lostDate);
@@ -26,5 +31,27 @@ public class LostItemService {
         List<LostItem> lostItems = lostItemRepository.findByFoundDateAndNameContaining(lostDate, name);
         return lostItems.stream().map(lostItem -> new LostItemListResponseDto(lostItem))
                 .toList();
+    }
+
+    @Transactional
+    public LostItem addLostItem(LostItemRequestDto dto) {
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        String imageUrl = imageService.saveImage(dto.getImage());
+
+        LostItem lostItem = new LostItem(
+                imageUrl,
+                dto.getName(),
+                dto.getDescription(),
+                dto.getStaffNotified(),
+                dto.getFoundLocation(),
+                dto.getFoundDate(),
+                dto.getFoundTime(),
+                user
+        );
+
+        LostItem savedLostItem = lostItemRepository.save(lostItem);
+        return savedLostItem;
     }
 }
