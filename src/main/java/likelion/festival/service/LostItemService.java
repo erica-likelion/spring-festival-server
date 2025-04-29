@@ -17,13 +17,13 @@ public class LostItemService {
     private final LostItemRepository lostItemRepository;
 
     public List<LostItemListResponseDto> findByLostDate(String lostDate) {
-        List<LostItem> lostItems = lostItemRepository.findByLostDate(lostDate);
+        List<LostItem> lostItems = lostItemRepository.findByFoundDate(lostDate);
         return lostItems.stream().map(lostItem -> new LostItemListResponseDto(lostItem))
                 .toList();
     }
 
     public List<LostItemListResponseDto> findByLostDateAndName(String lostDate, String name) {
-        List<LostItem> lostItems = lostItemRepository.findByLostDateAndNameContaining(lostDate, name);
+        List<LostItem> lostItems = lostItemRepository.findByFoundDateAndNameContaining(lostDate, name);
         return lostItems.stream().map(lostItem -> new LostItemListResponseDto(lostItem))
                 .toList();
     }
