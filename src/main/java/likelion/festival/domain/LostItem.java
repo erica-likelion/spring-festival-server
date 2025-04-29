@@ -29,7 +29,7 @@ public class LostItem {
     private String foundTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     public LostItem(

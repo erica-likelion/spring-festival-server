@@ -36,7 +36,7 @@ public class LostItemService {
     @Transactional
     public LostItem addLostItem(LostItemRequestDto dto) {
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElse(null);
 
         String imageUrl = imageService.saveImage(dto.getImage());
 
