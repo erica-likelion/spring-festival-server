@@ -2,6 +2,7 @@ package likelion.festival.utils;
 
 import likelion.festival.dto.KakaoUserInfo;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Component
 @Getter
+@Slf4j
 public class KakaoUtils {
     @Value("${kakao.auth.client}")
     private String clientId;
