@@ -1,8 +1,13 @@
 package likelion.festival.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import likelion.festival.domain.User;
 import likelion.festival.dto.AuthCodeRequestDto;
 import likelion.festival.service.AuthService;
+import likelion.festival.service.UserService;
+import likelion.festival.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final UserService userService;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @GetMapping("/auth/login/kakao/auth-code")
     public ResponseEntity<String> getAuthCode(@ModelAttribute AuthCodeRequestDto authCodeResponseDto, HttpServletResponse response){
@@ -27,5 +34,15 @@ public class AuthController {
 
         authService.doLoginProcess(authCodeResponseDto.getCode(), response);
         return ResponseEntity.ok().body("Login successful");
+    }
+
+    @PostMapping("/auth/refresh")
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtTokenUtils.getRefreshToken(request);
+
+        User user = userService.getUserByRefreshToken(refreshToken);
+        String token = jwtTokenUtils.generateAccessToken(user);
+        response.setHeader("Authorization", "Bearer " + token);
+        return "Token refreshed";
     }
 }
