@@ -2,6 +2,7 @@ package likelion.festival.service;
 
 import likelion.festival.domain.LostItem;
 import likelion.festival.domain.User;
+import likelion.festival.dto.LostItemDetailResponseDto;
 import likelion.festival.dto.LostItemListResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
 import likelion.festival.repository.LostItemRepository;
@@ -32,6 +33,12 @@ public class LostItemService {
         List<LostItem> lostItems = lostItemRepository.findByFoundDateAndNameContaining(lostDate, name);
         return lostItems.stream().map(lostItem -> new LostItemListResponseDto(lostItem))
                 .toList();
+    }
+
+    public LostItemDetailResponseDto findLostItem(Long lostItemId) {
+        LostItem lostItem = lostItemRepository.findById(lostItemId)
+                .orElseThrow();
+        return new LostItemDetailResponseDto(lostItem);
     }
 
     @Transactional
