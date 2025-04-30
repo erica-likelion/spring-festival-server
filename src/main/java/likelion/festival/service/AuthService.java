@@ -1,5 +1,7 @@
 package likelion.festival.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.domain.User;
@@ -7,10 +9,12 @@ import likelion.festival.dto.KakaoUserInfo;
 import likelion.festival.repository.UserRepository;
 import likelion.festival.utils.JwtTokenUtils;
 import likelion.festival.utils.KakaoUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AuthService {
     private final KakaoUtils kakaoUtils;
     private final UserRepository userRepository;
@@ -36,6 +40,7 @@ public class AuthService {
         String accessToken = kakaoUtils.getAccessToken(code);
 
         KakaoUserInfo userInfo = kakaoUtils.getUserInfo(accessToken);
+
 
         User user = getUserIfNotExistsSignup(userInfo.getEmail(), userInfo.getName());
 

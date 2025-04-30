@@ -2,6 +2,7 @@ package likelion.festival.service;
 
 import likelion.festival.domain.User;
 import likelion.festival.enums.RoleType;
+import likelion.festival.exceptions.JwtTokenException;
 import likelion.festival.exceptions.UserNotFoundException;
 import likelion.festival.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,9 @@ public class UserService {
                         .role(RoleType.ROLE_USER)
                         .build()
         );
+    }
+
+    public User getUserByRefreshToken(String refreshToken) {
+        return userRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new JwtTokenException("Refresh token not found"));
     }
 }

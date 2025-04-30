@@ -16,6 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    public static final String[] WHITELIST = {
+            "/auth/login/kakao/auth-code",
+            "/error",
+            "/admin/waiting",
+            "/auth/refresh"
+    };
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -23,7 +29,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/login/kakao/**", "/error").permitAll()
+                        .requestMatchers(WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors

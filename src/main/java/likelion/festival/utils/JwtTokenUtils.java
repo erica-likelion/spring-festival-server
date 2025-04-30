@@ -2,6 +2,8 @@ package likelion.festival.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import likelion.festival.domain.User;
 import likelion.festival.exceptions.JwtTokenException;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +55,20 @@ public class JwtTokenUtils {
                 .compact();
     }
 
+    public String getRefreshToken(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+
+        for (Cookie cookie : request.getCookies()) {
+            if ("refresh_token".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+
+        return null;
+    }
+
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -63,7 +79,7 @@ public class JwtTokenUtils {
         } catch (SecurityException | MalformedJwtException e) {
             throw new JwtTokenException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
-            throw new JwtTokenException("Expired JWT token");
+            throw new JwtTokenException("Expired");
         } catch (UnsupportedJwtException e) {
             throw new JwtTokenException("Unsupported JWT token");
         } catch (IllegalArgumentException e) {
