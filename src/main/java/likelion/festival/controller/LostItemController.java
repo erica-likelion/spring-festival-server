@@ -1,6 +1,7 @@
 package likelion.festival.controller;
 
 import likelion.festival.domain.LostItem;
+import likelion.festival.dto.LostItemDetailResponseDto;
 import likelion.festival.dto.LostItemListResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
 import likelion.festival.service.LostItemService;
@@ -29,6 +30,12 @@ public class LostItemController {
             lostItems = lostItemService.findByLostDateAndName(lostDate, name);
         }
         return ResponseEntity.ok(lostItems);
+    }
+
+    @GetMapping("/{lostItemId}")
+    public ResponseEntity<LostItemDetailResponseDto> getLostItemDetail(@PathVariable Long lostItemId) {
+        LostItemDetailResponseDto dto = lostItemService.findLostItem(lostItemId);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping
