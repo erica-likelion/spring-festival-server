@@ -19,5 +19,5 @@ public class LostItemRequestDto {
     private String foundLocation;
     private String foundDate;
     private String foundTime;
-    private Long userId;
+    //private Long userId;
 }
