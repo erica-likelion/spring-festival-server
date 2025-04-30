@@ -24,9 +24,32 @@ public class LostItem {
 
     private String foundLocation;
 
-    private LocalDateTime foundTime;
+    private String foundDate;
+
+    private String foundTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
+
+    public LostItem(
+            String image,
+            String name,
+            String description,
+            Boolean staffNotified,
+            String foundLocation,
+            String foundDate,
+            String foundTime,
+            User user
+    ) {
+        this.image = image;
+        this.name = name;
+        this.description = description;
+        this.staffNotified = staffNotified;
+        this.foundLocation = foundLocation;
+        this.foundDate = foundDate;
+        this.foundTime = foundTime;
+        this.user = user;
+    }
 }
+

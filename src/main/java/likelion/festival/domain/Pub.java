@@ -31,4 +31,8 @@ public class Pub {
     public Integer addWaitingNum() {
         return maxWaitingNum + 1;
     }
+
+    public void addLikeCount(Long addCount) {
+        this.likeCount += addCount;
+    }
 }
