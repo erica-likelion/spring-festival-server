@@ -28,9 +28,9 @@ public class LostItem {
 
     private String foundTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = true)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = true)
+//    private User user;
 
     public LostItem(
             String image,
@@ -39,8 +39,7 @@ public class LostItem {
             Boolean staffNotified,
             String foundLocation,
             String foundDate,
-            String foundTime,
-            User user
+            String foundTime
     ) {
         this.image = image;
         this.name = name;
@@ -49,7 +48,6 @@ public class LostItem {
         this.foundLocation = foundLocation;
         this.foundDate = foundDate;
         this.foundTime = foundTime;
-        this.user = user;
     }
 }
 

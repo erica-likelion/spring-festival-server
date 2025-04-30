@@ -43,8 +43,8 @@ public class LostItemService {
 
     @Transactional
     public LostItem addLostItem(LostItemRequestDto dto, MultipartFile image) {
-        User user = userRepository.findById(dto.getUserId())
-                .orElse(null);
+//        User user = userRepository.findById(dto.getUserId())
+//                .orElse(null);
 
         String imageUrl = imageService.saveImage(image);
 
@@ -55,8 +55,7 @@ public class LostItemService {
                 dto.getStaffNotified(),
                 dto.getFoundLocation(),
                 dto.getFoundDate(),
-                dto.getFoundTime(),
-                user
+                dto.getFoundTime()
         );
 
         LostItem savedLostItem = lostItemRepository.save(lostItem);
