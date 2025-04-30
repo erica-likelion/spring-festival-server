@@ -24,4 +24,8 @@ public class Pub {
 
     @OneToMany(mappedBy = "pub", cascade = CascadeType.REMOVE)
     private List<Waiting> waitingList;
+
+    public void addLikeCount(Long addCount) {
+        this.likeCount += addCount;
+    }
 }
