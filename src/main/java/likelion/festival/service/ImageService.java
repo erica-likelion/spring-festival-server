@@ -20,8 +20,8 @@ public class ImageService {
         }
 
         try {
-            String originalFilename = file.getOriginalFilename();
-            String filename = UUID.randomUUID() + "_" + originalFilename;
+            String extension = getExtension(file.getOriginalFilename());
+            String filename = UUID.randomUUID() + "_" + extension;
             Path savePath = Paths.get(uploadDir, filename);
 
             Files.createDirectories(savePath.getParent());
