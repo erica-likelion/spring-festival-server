@@ -1,5 +1,6 @@
 package likelion.festival.controller;
 
+import jakarta.validation.Valid;
 import likelion.festival.dto.PubRequestDto;
 import likelion.festival.dto.PubResponseDto;
 import likelion.festival.service.PubService;
@@ -23,7 +24,7 @@ public class PubController {
     }
 
     @PostMapping("{pubId}/likes")
-    public ResponseEntity<Void> addLike(@PathVariable Long pubId, @RequestBody PubRequestDto dto) {
+    public ResponseEntity<Void> addLike(@PathVariable Long pubId, @Valid @RequestBody PubRequestDto dto) {
         pubService.addPubLike(pubId, dto.getAddCount());
         return ResponseEntity.noContent().build();
     }
