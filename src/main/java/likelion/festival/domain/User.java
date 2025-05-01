@@ -30,8 +30,8 @@ public class User {
 
     private String refreshToken;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<LostItem> lostItems = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    private List<LostItem> lostItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Waiting> waitingList = new ArrayList<>();
