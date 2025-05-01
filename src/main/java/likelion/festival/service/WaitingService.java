@@ -33,7 +33,8 @@ public class WaitingService {
         validateDuplicatedWaiting(waitingList, pub);
 
 
-        Waiting waiting = save(waitingRequestDto, pub.getMaxWaitingNum() + 1, user, pub);
+
+        Waiting waiting = save(waitingRequestDto, pub.addWaitingNum(), user, pub);
         return new WaitingResponseDto(waiting.getWaitingNum(),
                 pub.getMaxWaitingNum() - pub.getEnterNum()
         );
