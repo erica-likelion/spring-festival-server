@@ -7,6 +7,7 @@ import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.MyWaitingList;
 import likelion.festival.dto.WaitingRequestDto;
 import likelion.festival.dto.WaitingResponseDto;
+import likelion.festival.exceptions.PubException;
 import likelion.festival.exceptions.WaitingException;
 import likelion.festival.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,10 @@ public class WaitingService {
 
     @Transactional
     public void deleteWaiting(Integer waitingNum) {
-        waitingRepository.deleteByWaitingNum(waitingNum);
+        int deletedCount = waitingRepository.deleteByWaitingNum(waitingNum);
+        if (deletedCount == 0) {
+            throw new WaitingException("No waiting found");
+        }
     }
 
     public List<MyWaitingList> getWaitingList(User user) {
@@ -65,7 +69,7 @@ public class WaitingService {
     private void validateDuplicatedWaiting(List<Waiting> waitingList, Pub pub) {
         if (waitingList.stream()
                 .anyMatch(waiting -> waiting.getPub().equals(pub))) {
-            throw new RuntimeException("이미 해당 주점에 대한 대기열이 존재합니다.");
+            throw new PubException("이미 해당 주점에 대한 대기열이 존재합니다.");
         }
     }
 }

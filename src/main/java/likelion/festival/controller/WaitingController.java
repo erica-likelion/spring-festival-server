@@ -31,9 +31,9 @@ public class WaitingController {
     }
 
     @DeleteMapping("/api/waitings")
-    public ResponseEntity<String> removeWaiting(@RequestParam Integer waitingNum) {
+    public String removeWaiting(@RequestParam Integer waitingNum) {
         waitingService.deleteWaiting(waitingNum);
-        return ResponseEntity.ok().build();
+        return "Delete Successfully!";
     }
 
     @GetMapping("/api/waitings")
