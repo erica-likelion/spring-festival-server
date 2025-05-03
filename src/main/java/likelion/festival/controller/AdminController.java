@@ -19,8 +19,8 @@ public class AdminController {
     private final GuestWaitingService guestWaitingService;
 
     @DeleteMapping("/admin/waiting")
-    public ResponseEntity<String> deleteWaitingByAdmin(@RequestParam Integer waitingNum) {
-        waitingService.deleteWaiting(waitingNum);
+    public ResponseEntity<String> deleteWaitingByAdmin(@RequestParam Long waitingId) {
+        waitingService.deleteWaiting(waitingId);
         return ResponseEntity.ok().build();
     }
 

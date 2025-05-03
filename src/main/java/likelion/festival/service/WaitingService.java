@@ -26,19 +26,16 @@ public class WaitingService {
     @Transactional
     public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto){
         List<Waiting> waitingList = user.getWaitingList();
-        if (waitingList.size() > 3) {
+        if (waitingList.size() == 3) {
             throw new WaitingException("Waiting list is full");
         }
 
         Pub pub = pubService.getPubById(waitingRequestDto.getPubId());
         validateDuplicatedWaiting(waitingList, pub);
 
-
-
         Waiting waiting = save(waitingRequestDto, pub.addWaitingNum(), user, pub);
-        return new WaitingResponseDto(waiting.getWaitingNum(),
-                pub.getMaxWaitingNum() - pub.getEnterNum()
-        );
+        return new WaitingResponseDto(waiting.getId(), waiting.getWaitingNum(),
+                pub.getMaxWaitingNum() - pub.getEnterNum());
     }
 
     @Transactional
@@ -52,11 +49,8 @@ public class WaitingService {
     }
 
     @Transactional
-    public void deleteWaiting(Integer waitingNum) {
-        int deletedCount = waitingRepository.deleteByWaitingNum(waitingNum);
-        if (deletedCount == 0) {
-            throw new WaitingException("No waiting found");
-        }
+    public void deleteWaiting(Long waitingId) {
+        waitingRepository.deleteById(waitingId);
     }
 
     public List<MyWaitingList> getWaitingList(User user) {

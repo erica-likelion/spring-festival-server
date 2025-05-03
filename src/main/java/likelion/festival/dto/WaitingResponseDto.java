@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class WaitingResponseDto {
+    private Long id;
     private Integer waitingNum;
     private Integer numsTeamsAhead;
 }
