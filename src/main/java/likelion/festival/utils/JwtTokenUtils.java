@@ -57,7 +57,7 @@ public class JwtTokenUtils {
 
     public String getRefreshToken(HttpServletRequest request) {
         if (request.getCookies() == null) {
-            return null;
+            throw new JwtTokenException("Token is empty");
         }
 
         for (Cookie cookie : request.getCookies()) {
@@ -66,7 +66,7 @@ public class JwtTokenUtils {
             }
         }
 
-        return null;
+        throw new JwtTokenException("Token is empty");
     }
 
     public boolean validateToken(String token) {

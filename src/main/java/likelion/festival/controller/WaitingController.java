@@ -17,31 +17,35 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/waitings")
 public class WaitingController {
     private final WaitingService waitingService;
     private final UserService userService;
 
-    @PostMapping("/api/waitings")
+    @PostMapping
     public WaitingResponseDto makeWaiting(@RequestBody WaitingRequestDto waitingRequestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUserDetails userDetails = getRequestUser();
         User user = userService.getUserByEmail(userDetails.getUsername());
 
         return waitingService.addWaiting(user, waitingRequestDto);
     }
 
-    @DeleteMapping("/api/waitings")
-    public ResponseEntity<String> removeWaiting(@RequestParam Integer waitingNum) {
-        waitingService.deleteWaiting(waitingNum);
-        return ResponseEntity.ok().build();
+    @DeleteMapping
+    public String removeWaiting(@RequestParam Long waitingId) {
+        waitingService.deleteWaiting(waitingId);
+        return "Delete Successfully!";
     }
 
-    @GetMapping("/api/waitings")
+    @GetMapping
     public List<MyWaitingList> getWaitingList() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUserDetails userDetails = getRequestUser();
         User user = userService.getUserByEmail(userDetails.getUsername());
 
         return waitingService.getWaitingList(user);
+    }
+
+    private CustomUserDetails getRequestUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 }
