@@ -21,7 +21,8 @@ public class SecurityConfig {
             "/error",
             "/admin/waiting",
             "/auth/refresh",
-            "/auth/admin-login"
+            "/auth/admin-login",
+            "/images"
     };
 
     @Bean
@@ -30,6 +31,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers(WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
