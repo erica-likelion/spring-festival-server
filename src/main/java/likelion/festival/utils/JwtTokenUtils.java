@@ -36,7 +36,7 @@ public class JwtTokenUtils {
                 .setHeader(createHeader())
                 .setClaims(createClaims(user))
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getId()))
+                .setSubject(String.valueOf(user.getEmail()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -49,7 +49,7 @@ public class JwtTokenUtils {
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getId()))
+                .setSubject(String.valueOf(user.getEmail()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
