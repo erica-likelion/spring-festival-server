@@ -34,7 +34,8 @@ public class Pub {
     private List<GuestWaiting> guestWaitingList;
 
     public Integer addWaitingNum() {
-        return maxWaitingNum + 1;
+        this.maxWaitingNum += 1;
+        return this.maxWaitingNum;
     }
 
     public void addLikeCount(Long addCount) {

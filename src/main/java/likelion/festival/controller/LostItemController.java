@@ -1,9 +1,11 @@
 package likelion.festival.controller;
 
+import jakarta.validation.Valid;
 import likelion.festival.domain.LostItem;
 import likelion.festival.dto.LostItemDetailResponseDto;
 import likelion.festival.dto.LostItemListResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
+import likelion.festival.exceptions.MissingImageException;
 import likelion.festival.service.LostItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +41,13 @@ public class LostItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addLostItem(@RequestPart("data") LostItemRequestDto dto, @RequestPart("image") MultipartFile image) {
-        System.out.println(dto);
+    public ResponseEntity<Void> addLostItem(@Valid @RequestPart("data") LostItemRequestDto dto, @RequestPart("image") MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            throw new MissingImageException("분실물 이미지가 첨부되지 않았습니다.");
+        }
 
         LostItem lostItem = lostItemService.addLostItem(dto, image);
-        URI location =URI.create("/api/lost-items/" + lostItem.getId());
+        URI location = URI.create("/api/lost-items/" + lostItem.getId());
         return ResponseEntity.created(location).build();
     }
 }

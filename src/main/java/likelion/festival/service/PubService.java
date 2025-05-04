@@ -2,6 +2,7 @@ package likelion.festival.service;
 
 import likelion.festival.domain.Pub;
 import likelion.festival.dto.PubResponseDto;
+import likelion.festival.exceptions.PubException;
 import likelion.festival.repository.PubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class PubService {
 
     @Transactional
     public Pub getPubById(Long id) {
-        return pubRepository.findById(id).orElseThrow();
+        return pubRepository.findById(id).orElseThrow(() -> new PubException("No pub with id" + id));
     }
 
     public List<PubResponseDto> getPubRanks() {

@@ -7,6 +7,7 @@ import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.MyWaitingList;
 import likelion.festival.dto.WaitingRequestDto;
 import likelion.festival.dto.WaitingResponseDto;
+import likelion.festival.exceptions.PubException;
 import likelion.festival.exceptions.WaitingException;
 import likelion.festival.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,18 +26,16 @@ public class WaitingService {
     @Transactional
     public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto){
         List<Waiting> waitingList = user.getWaitingList();
-        if (waitingList.size() > 3) {
+        if (waitingList.size() == 3) {
             throw new WaitingException("Waiting list is full");
         }
 
         Pub pub = pubService.getPubById(waitingRequestDto.getPubId());
         validateDuplicatedWaiting(waitingList, pub);
 
-
-        Waiting waiting = save(waitingRequestDto, pub.getMaxWaitingNum() + 1, user, pub);
-        return new WaitingResponseDto(waiting.getWaitingNum(),
-                pub.getMaxWaitingNum() - pub.getEnterNum()
-        );
+        Waiting waiting = save(waitingRequestDto, pub.addWaitingNum(), user, pub);
+        return new WaitingResponseDto(waiting.getId(), waiting.getWaitingNum(),
+                pub.getMaxWaitingNum() - pub.getEnterNum());
     }
 
     @Transactional
@@ -50,8 +49,8 @@ public class WaitingService {
     }
 
     @Transactional
-    public void deleteWaiting(Integer waitingNum) {
-        waitingRepository.deleteByWaitingNum(waitingNum);
+    public void deleteWaiting(Long waitingId) {
+        waitingRepository.deleteById(waitingId);
     }
 
     public List<MyWaitingList> getWaitingList(User user) {
@@ -65,7 +64,7 @@ public class WaitingService {
     private void validateDuplicatedWaiting(List<Waiting> waitingList, Pub pub) {
         if (waitingList.stream()
                 .anyMatch(waiting -> waiting.getPub().equals(pub))) {
-            throw new RuntimeException("이미 해당 주점에 대한 대기열이 존재합니다.");
+            throw new PubException("이미 해당 주점에 대한 대기열이 존재합니다.");
         }
     }
 }

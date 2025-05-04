@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class WaitingResponseDto {
+public class AdminDeleteDto {
     private Long id;
-    private Integer waitingNum;
-    private Integer numsTeamsAhead;
+    private String type;
 }

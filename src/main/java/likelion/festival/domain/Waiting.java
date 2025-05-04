@@ -10,9 +10,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "waiting", indexes = {
-        @Index(name = "idx_waiting_num", columnList = "waiting_num")
-})
 public class Waiting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

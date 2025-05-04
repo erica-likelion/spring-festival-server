@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
-    void deleteByWaitingNum(Integer waitingNum);
 
     @Query("SELECT new likelion.festival.dto.MyWaitingList(" +
-            "p.enterNum - p.maxWaitingNum, " +
+            "w.id, " +
+            "p.maxWaitingNum - p.enterNum, " +
             "p.enterNum - w.waitingNum, " +
             "p.id, " +
             "w.visitorCount) " +
@@ -25,7 +25,8 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
             "w.createdAt," +
             "w.waitingNum, " +
             "w.visitorCount, " +
-            "w.phoneNumber) " +
+            "w.phoneNumber, " +
+            "'Online')" +
             "FROM Waiting w " +
             "JOIN w.pub p " +
             "WHERE w.pub.id = :pubId")
