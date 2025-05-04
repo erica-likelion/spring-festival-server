@@ -20,7 +20,8 @@ public class SecurityConfig {
             "/auth/login/kakao/auth-code",
             "/error",
             "/admin/waiting",
-            "/auth/refresh"
+            "/auth/refresh",
+            "/auth/admin-login"
     };
 
     @Bean
