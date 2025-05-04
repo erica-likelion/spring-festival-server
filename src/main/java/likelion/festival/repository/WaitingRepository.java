@@ -22,6 +22,7 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
     List<MyWaitingList> findWaitingListByUserId(Long userId);
 
     @Query("SELECT new likelion.festival.dto.AdminWaitingList(" +
+            "w. id," +
             "w.createdAt," +
             "w.waitingNum, " +
             "w.visitorCount, " +

@@ -8,4 +8,5 @@ import lombok.Getter;
 public class AdminDeleteDto {
     private Long id;
     private String type;
+    private String fcmToken;
 }

@@ -30,6 +30,8 @@ public class User {
 
     private String refreshToken;
 
+    private String fcmToken;
+
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 //    private List<LostItem> lostItems = new ArrayList<>();
 
@@ -38,5 +40,9 @@ public class User {
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }
