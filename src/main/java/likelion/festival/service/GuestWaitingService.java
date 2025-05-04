@@ -2,11 +2,14 @@ package likelion.festival.service;
 
 import likelion.festival.domain.GuestWaiting;
 import likelion.festival.domain.Pub;
+import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
 import likelion.festival.repository.GuestWaitingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,5 +28,14 @@ public class GuestWaitingService {
                         pub.addWaitingNum(),
                         pub)
         );
+    }
+
+    public List<AdminWaitingList> getAdminWaitingList(Long pubId) {
+        return guestWaitingRepository.findGuestWaitingListByPubId(pubId);
+    }
+
+    @Transactional
+    public void deleteGuestWaiting(Long guestWaitingId) {
+        guestWaitingRepository.deleteById(guestWaitingId);
     }
 }

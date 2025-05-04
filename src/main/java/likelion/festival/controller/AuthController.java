@@ -1,6 +1,5 @@
 package likelion.festival.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.domain.User;
@@ -39,8 +38,9 @@ public class AuthController {
     @PostMapping("/auth/refresh")
     public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenUtils.getRefreshToken(request);
+        Long userId = Long.valueOf(jwtTokenUtils.getClaims(refreshToken).getSubject());
 
-        User user = userService.getUserByRefreshToken(refreshToken);
+        User user = userService.getUserById(userId);
         String token = jwtTokenUtils.generateAccessToken(user);
         response.setHeader("Authorization", "Bearer " + token);
         return "Token refreshed";

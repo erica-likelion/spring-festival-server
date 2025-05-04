@@ -10,4 +10,5 @@ public class AdminWaitingList {
     private Integer waitingNum;
     private Integer visitorCount;
     private String phoneNumber;
+    private String type;
 }

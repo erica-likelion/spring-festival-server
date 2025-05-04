@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
-    void deleteById(Long id);
 
     @Query("SELECT new likelion.festival.dto.MyWaitingList(" +
             "w.id, " +
@@ -26,7 +25,8 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
             "w.createdAt," +
             "w.waitingNum, " +
             "w.visitorCount, " +
-            "w.phoneNumber) " +
+            "w.phoneNumber, " +
+            "'Online')" +
             "FROM Waiting w " +
             "JOIN w.pub p " +
             "WHERE w.pub.id = :pubId")
