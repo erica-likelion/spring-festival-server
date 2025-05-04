@@ -61,6 +61,11 @@ public class WaitingService {
         return waitingRepository.findWaitingsByPubId(pubId);
     }
 
+    public Waiting getWaitingById(Long waitingId) {
+        return waitingRepository.findById(waitingId).orElseThrow(()
+                -> new WaitingException("Waiting not found"));
+    }
+
     private void validateDuplicatedWaiting(List<Waiting> waitingList, Pub pub) {
         if (waitingList.stream()
                 .anyMatch(waiting -> waiting.getPub().equals(pub))) {
