@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface GuestWaitingRepository extends JpaRepository<GuestWaiting, Long> {
     @Query("SELECT new likelion.festival.dto.AdminWaitingList(" +
+            "gw.id," +
             "gw.createdAt," +
             "gw.waitingNum, " +
             "gw.visitorCount, " +

@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+festival-webapp-firebase-adminsdk-fbsvc-d7a1434630.json
 
 ### STS ###
 .apt_generated
