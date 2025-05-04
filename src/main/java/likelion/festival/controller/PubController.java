@@ -22,7 +22,7 @@ public class PubController {
         return ResponseEntity.ok(pubs);
     }
 
-    @PostMapping("{PubId}/likes")
+    @PostMapping("{pubId}/likes")
     public ResponseEntity<Void> addLike(@PathVariable Long pubId, @RequestBody PubRequestDto dto) {
         pubService.addPubLike(pubId, dto.getAddCount());
         return ResponseEntity.noContent().build();
