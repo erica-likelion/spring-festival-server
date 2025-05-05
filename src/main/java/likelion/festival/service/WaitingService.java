@@ -7,6 +7,7 @@ import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.MyWaitingList;
 import likelion.festival.dto.WaitingRequestDto;
 import likelion.festival.dto.WaitingResponseDto;
+import likelion.festival.exceptions.EntityNotFoundException;
 import likelion.festival.exceptions.PubException;
 import likelion.festival.exceptions.WaitingException;
 import likelion.festival.repository.WaitingRepository;
@@ -52,6 +53,9 @@ public class WaitingService {
 
     @Transactional
     public void deleteWaiting(Long waitingId) {
+        if (!waitingRepository.existsById(waitingId)) {
+            throw new EntityNotFoundException("해당 id를 가진 웨이팅이 존재하지 않습니다: " + waitingId);
+        }
         waitingRepository.deleteById(waitingId);
     }
 

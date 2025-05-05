@@ -1,10 +1,12 @@
 package likelion.festival.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
+@Getter
 public class AdminWaitingList {
     private Long id;
     private LocalDateTime createdAt;
