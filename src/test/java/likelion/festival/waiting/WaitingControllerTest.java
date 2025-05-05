@@ -43,6 +43,7 @@ public class WaitingControllerTest {
     private String token;
     private User testUser;
     private Pub testPub;
+    private Long pubId;
 
     @BeforeEach
     void setUp() {
@@ -60,21 +61,22 @@ public class WaitingControllerTest {
                 .maxWaitingNum(10)
                 .build();
         pubRepository.save(testPub);
+        pubId = testPub.getId();
 
         token = jwtTokenUtils.generateAccessToken(testUser);
     }
 
     @Test
     void testMakeWaiting() throws Exception {
-        WaitingRequestDto requestDto = new WaitingRequestDto(3, "010-1234-5678","hello", 1L);
+        WaitingRequestDto requestDto = new WaitingRequestDto(3, "010-1234-5678","hello", pubId);
 
         mockMvc.perform(post("/api/waitings")
                         .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON) // 헤더 설정
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))                 // Long 값
-                .andExpect(jsonPath("$.waitingNum").value(11))         // Integer 값
-                .andExpect(jsonPath("$.numsTeamsAhead").value(7));
+                .andExpect(jsonPath("$.id").value(pubId))
+                .andExpect(jsonPath("$.waitingNum").value(11))
+                .andExpect(jsonPath("$.numsTeamsAhead").value(8));
     }
 }

@@ -26,12 +26,14 @@ public class WaitingService {
     @Transactional
     public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto){
         List<Waiting> waitingList = user.getWaitingList();
-        if (waitingList.size() == 3) {
+        if (waitingList != null && waitingList.size() == 3) {
             throw new WaitingException("Waiting list is full");
         }
 
         Pub pub = pubService.getPubById(waitingRequestDto.getPubId());
-        validateDuplicatedWaiting(waitingList, pub);
+        if (waitingList != null) {
+            validateDuplicatedWaiting(waitingList, pub);
+        }
 
         Waiting waiting = save(waitingRequestDto, pub.addWaitingNum(), user, pub);
         return new WaitingResponseDto(waiting.getId(), waiting.getWaitingNum(),
