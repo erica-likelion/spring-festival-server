@@ -67,6 +67,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleRequestParamError(MissingServletRequestParameterException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 query parameter " + ex.getParameterName() + " 가 전달되지 않았습니다.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 쿼리 파라미터 " + ex.getParameterName() + " 가 전달되지 않았습니다.");
     }
 }
