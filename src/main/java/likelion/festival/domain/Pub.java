@@ -18,13 +18,18 @@ public class Pub {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String host;
+    //private String host;
+
+    @Column(unique = true)
+    private String name;
 
     private Long likeCount;
 
     private Integer enterNum;
 
     private Integer maxWaitingNum;
+
+    private String password;
 
     @OneToMany(mappedBy = "pub", cascade = CascadeType.REMOVE)
     private List<Waiting> waitingList;

@@ -3,6 +3,7 @@ package likelion.festival.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.domain.User;
+import likelion.festival.dto.AdminLoginDto;
 import likelion.festival.dto.AuthCodeRequestDto;
 import likelion.festival.service.AuthService;
 import likelion.festival.service.UserService;
@@ -44,5 +45,11 @@ public class AuthController {
         String token = jwtTokenUtils.generateAccessToken(user);
         response.setHeader("Authorization", "Bearer " + token);
         return "Token refreshed";
+    }
+
+    @PostMapping("/auth/admin-login")
+    public ResponseEntity<String> adminLogin(@RequestBody AdminLoginDto dto, HttpServletResponse response) {
+        authService.adminLogin(dto.getUsername(), dto.getPassword(), response);
+        return ResponseEntity.ok("관리자 로그인이 완료되었습니다.");
     }
 }
