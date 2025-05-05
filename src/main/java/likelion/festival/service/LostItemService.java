@@ -5,6 +5,8 @@ import likelion.festival.domain.User;
 import likelion.festival.dto.LostItemDetailResponseDto;
 import likelion.festival.dto.LostItemListResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
+import likelion.festival.exceptions.EntityNotFoundException;
+import likelion.festival.exceptions.InvalidRequestException;
 import likelion.festival.repository.LostItemRepository;
 import likelion.festival.repository.UserRepository;
 import lombok.Getter;
@@ -37,15 +39,12 @@ public class LostItemService {
 
     public LostItemDetailResponseDto findLostItem(Long lostItemId) {
         LostItem lostItem = lostItemRepository.findById(lostItemId)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("요청한 id를 가진 분실물이 존재하지 않습니다: " + lostItemId));
         return new LostItemDetailResponseDto(lostItem);
     }
 
     @Transactional
     public LostItem addLostItem(LostItemRequestDto dto, MultipartFile image) {
-//        User user = userRepository.findById(dto.getUserId())
-//                .orElse(null);
-
         String imageUrl = imageService.saveImage(image);
 
         LostItem lostItem = new LostItem(

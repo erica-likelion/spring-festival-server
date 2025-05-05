@@ -5,7 +5,7 @@ import likelion.festival.domain.LostItem;
 import likelion.festival.dto.LostItemDetailResponseDto;
 import likelion.festival.dto.LostItemListResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
-import likelion.festival.exceptions.MissingImageException;
+import likelion.festival.exceptions.InvalidRequestException;
 import likelion.festival.service.LostItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,8 @@ public class LostItemController {
     @GetMapping
     public ResponseEntity<List<LostItemListResponseDto>> getLostItems(@RequestParam String lostDate, @RequestParam(required = false) String name) {
         List<LostItemListResponseDto>lostItems;
+
+        validateFestivalDate(lostDate);
 
         if (name == null || name.isBlank()) { // 모든 분실물을 반환
             lostItems = lostItemService.findByLostDate(lostDate);
@@ -43,11 +46,20 @@ public class LostItemController {
     @PostMapping
     public ResponseEntity<Void> addLostItem(@Valid @RequestPart("data") LostItemRequestDto dto, @RequestPart("image") MultipartFile image) {
         if (image == null || image.isEmpty()) {
-            throw new MissingImageException("분실물 이미지가 첨부되지 않았습니다.");
+            throw new InvalidRequestException("분실물 이미지가 첨부되지 않았습니다.");
         }
+
+        validateFestivalDate(dto.getFoundDate());
 
         LostItem lostItem = lostItemService.addLostItem(dto, image);
         URI location = URI.create("/api/lost-items/" + lostItem.getId());
         return ResponseEntity.created(location).build();
+    }
+
+    private void validateFestivalDate(String date) {
+        List<String> possibleDates = Arrays.asList("1일차", "2일차", "3일차");
+        if (!possibleDates.contains(date)) {
+            throw new InvalidRequestException("foundDate는 ['1일차', '2일차', '3일차'] 중 하나를 입력해야합니다.");
+        }
     }
 }
