@@ -1,5 +1,6 @@
 package likelion.festival.controller;
 
+import jakarta.validation.Valid;
 import likelion.festival.domain.GuestWaiting;
 import likelion.festival.dto.AdminDeleteDto;
 import likelion.festival.dto.AdminWaitingList;
@@ -37,7 +38,7 @@ public class AdminController {
     }
 
     @PostMapping
-    public GuestWaitingResponseDto addGuestWaiting(@RequestBody GuestWaitingRequestDto guestWaitingRequestDto) {
+    public GuestWaitingResponseDto addGuestWaiting(@Valid @RequestBody GuestWaitingRequestDto guestWaitingRequestDto) {
         GuestWaiting guestWaiting = guestWaitingService.addGuestWaiting(guestWaitingRequestDto);
 
         return new GuestWaitingResponseDto(guestWaiting);

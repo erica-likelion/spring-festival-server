@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -27,6 +28,7 @@ public class AdminService {
         adminWaitingList.addAll(waitingService.getAdminWaitingList(pubId));
         adminWaitingList.addAll(guestWaitingService.getAdminWaitingList(pubId));
 
+        adminWaitingList.sort(Comparator.comparing(AdminWaitingList::getWaitingNum));
         return adminWaitingList;
     }
 
