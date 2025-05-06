@@ -4,6 +4,7 @@ import likelion.festival.domain.GuestWaiting;
 import likelion.festival.domain.Pub;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
+import likelion.festival.exceptions.EntityNotFoundException;
 import likelion.festival.repository.GuestWaitingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class GuestWaitingService {
 
     @Transactional
     public void deleteGuestWaiting(Long guestWaitingId) {
-        guestWaitingRepository.deleteById(guestWaitingId);
+        GuestWaiting guestWaiting = guestWaitingRepository.findById(guestWaitingId)
+                .orElseThrow(() -> new EntityNotFoundException("WalkIn Waiting is not found given id " + guestWaitingId));
+        guestWaitingRepository.delete(guestWaiting);
     }
 }
