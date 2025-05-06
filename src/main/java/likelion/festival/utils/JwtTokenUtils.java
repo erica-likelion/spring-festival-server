@@ -36,7 +36,7 @@ public class JwtTokenUtils {
                 .setHeader(createHeader())
                 .setClaims(createClaims(user))
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getEmail()))
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -49,7 +49,7 @@ public class JwtTokenUtils {
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getEmail()))
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -61,7 +61,7 @@ public class JwtTokenUtils {
         }
 
         for (Cookie cookie : request.getCookies()) {
-            if ("refresh_token".equals(cookie.getName())) {
+            if ("refreshToken".equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

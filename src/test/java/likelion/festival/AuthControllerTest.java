@@ -1,9 +1,10 @@
-package likelion.festival.waiting;
+package likelion.festival;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import likelion.festival.domain.Pub;
 import likelion.festival.domain.User;
-import likelion.festival.dto.WaitingRequestDto;
+import likelion.festival.dto.AdminLoginDto;
 import likelion.festival.enums.RoleType;
 import likelion.festival.repository.PubRepository;
 import likelion.festival.repository.UserRepository;
@@ -18,13 +19,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class WaitingControllerTest {
+public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -32,18 +33,17 @@ public class WaitingControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private PubRepository pubRepository;
+    private JwtTokenUtils jwtTokenUtils;
 
     @Autowired
-    private JwtTokenUtils jwtTokenUtils;
+    private PubRepository pubRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String token;
     private User testUser;
+    private String refreshToken;
     private Pub testPub;
-    private Long pubId;
 
     @BeforeEach
     void setUp() {
@@ -54,29 +54,41 @@ public class WaitingControllerTest {
                 .build();
         userRepository.save(testUser);
 
-        testPub = Pub.builder()
-                .host("test")
-                .enterNum(3)
-                .likeCount(1000L)
-                .maxWaitingNum(10)
-                .build();
-        pubRepository.save(testPub);
-        pubId = testPub.getId();
-
-        token = jwtTokenUtils.generateAccessToken(testUser);
+        refreshToken = jwtTokenUtils.generateRefreshToken(testUser);
+        testUser.updateRefreshToken(refreshToken);
     }
 
     @Test
-    void testMakeWaiting() throws Exception {
-        WaitingRequestDto requestDto = new WaitingRequestDto(3, "010-1234-5678","hello", pubId);
-
-        mockMvc.perform(post("/api/waitings")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+    void testRefreshTokenApi() throws Exception {
+        mockMvc.perform(post("/auth/refresh")
+                        .cookie(new Cookie("refreshToken", refreshToken)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(pubId))
-                .andExpect(jsonPath("$.waitingNum").value(11))
-                .andExpect(jsonPath("$.numsTeamsAhead").value(8));
+                .andExpect(header().exists("Authorization"))
+                .andExpect(content().string("Token refreshed"));
+    }
+
+    void initPub() {
+        testPub = Pub.builder()
+                .enterNum(3)
+                .maxWaitingNum(10)
+                .likeCount(1000L)
+                .name("test@test.com")
+                .password("arsenal")
+                .build();
+
+        pubRepository.save(testPub);
+    }
+
+    @Test
+    void testAdminLogin() throws Exception {
+        initPub();
+        AdminLoginDto adminLoginDto = new AdminLoginDto("test@test.com", "arsenal");
+
+        mockMvc.perform(post("/auth/admin-login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(adminLoginDto)))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("Authorization"))
+                .andExpect(cookie().exists("refreshToken"));
     }
 }
