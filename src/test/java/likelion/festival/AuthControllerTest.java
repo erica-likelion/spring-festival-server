@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import likelion.festival.domain.Pub;
 import likelion.festival.domain.User;
+import likelion.festival.dto.AdminLoginDto;
 import likelion.festival.enums.RoleType;
+import likelion.festival.repository.PubRepository;
 import likelion.festival.repository.UserRepository;
 import likelion.festival.utils.JwtTokenUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,12 @@ public class AuthControllerTest {
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
 
+    @Autowired
+    private PubRepository pubRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private User testUser;
     private String refreshToken;
     private Pub testPub;
@@ -59,7 +67,28 @@ public class AuthControllerTest {
                 .andExpect(content().string("Token refreshed"));
     }
 
-    void testAdminLogin() throws Exception {
+    void initPub() {
+        testPub = Pub.builder()
+                .enterNum(3)
+                .maxWaitingNum(10)
+                .likeCount(1000L)
+                .name("test@test.com")
+                .password("arsenal")
+                .build();
 
+        pubRepository.save(testPub);
+    }
+
+    @Test
+    void testAdminLogin() throws Exception {
+        initPub();
+        AdminLoginDto adminLoginDto = new AdminLoginDto("test@test.com", "arsenal");
+
+        mockMvc.perform(post("/auth/admin-login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(adminLoginDto)))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("Authorization"))
+                .andExpect(cookie().exists("refreshToken"));
     }
 }
