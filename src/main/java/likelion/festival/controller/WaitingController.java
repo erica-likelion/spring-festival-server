@@ -32,8 +32,8 @@ public class WaitingController {
     }
 
     @DeleteMapping
-    public String removeWaiting(@RequestParam Long waitingId) {
-        waitingService.deleteWaiting(waitingId);
+    public String removeWaiting(@RequestParam Long id) {
+        waitingService.deleteWaiting(id);
         return "Delete Successfully!";
     }
 
