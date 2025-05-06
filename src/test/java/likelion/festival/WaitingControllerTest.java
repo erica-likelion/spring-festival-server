@@ -1,4 +1,4 @@
-package likelion.festival.waiting;
+package likelion.festival;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import likelion.festival.domain.Pub;
@@ -55,7 +55,7 @@ public class WaitingControllerTest {
         userRepository.save(testUser);
 
         testPub = Pub.builder()
-                .host("test")
+                .name("test")
                 .enterNum(3)
                 .likeCount(1000L)
                 .maxWaitingNum(10)
@@ -78,5 +78,9 @@ public class WaitingControllerTest {
                 .andExpect(jsonPath("$.id").value(pubId))
                 .andExpect(jsonPath("$.waitingNum").value(11))
                 .andExpect(jsonPath("$.numsTeamsAhead").value(8));
+    }
+
+    void testDeleteWaiting() throws Exception {
+
     }
 }
