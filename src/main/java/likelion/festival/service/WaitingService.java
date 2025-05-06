@@ -59,14 +59,18 @@ public class WaitingService {
                 pub));
     }
 
+    public Waiting getWaiting(Long waitingId) {
+        return waitingRepository.findById(waitingId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 웨이팅이 존재하지 않습니다: " + waitingId));
+    }
+
     @Transactional
     public void deleteWaiting(Long waitingId) {
 //        if (!waitingRepository.existsById(waitingId)) {
 //            throw new EntityNotFoundException("해당 id를 가진 웨이팅이 존재하지 않습니다: " + waitingId);
 //        }
 //        waitingRepository.deleteById(waitingId);
-        Waiting waiting = waitingRepository.findById(waitingId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 웨이팅이 존재하지 않습니다: " + waitingId));
+        Waiting waiting = getWaiting(waitingId);
         waitingRepository.delete(waiting);
     }
 
