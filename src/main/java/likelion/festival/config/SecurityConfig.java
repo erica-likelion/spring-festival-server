@@ -22,6 +22,8 @@ public class SecurityConfig {
             "/admin/waiting",
             "/auth/refresh",
             "/auth/admin-login",
+            "/api/lost-items",
+            "/api/pubs",
             "/images"
     };
 
@@ -31,7 +33,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/images/**", "/api/lost-items/**", "/api/pubs/**").permitAll()
                         .requestMatchers(WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
