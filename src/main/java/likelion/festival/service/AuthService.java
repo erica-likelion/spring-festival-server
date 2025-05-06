@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.domain.Pub;
 import likelion.festival.domain.User;
 import likelion.festival.dto.KakaoUserInfo;
+import likelion.festival.exceptions.InvalidRequestException;
+import likelion.festival.exceptions.PubException;
+import likelion.festival.exceptions.UserNotFoundException;
 import likelion.festival.repository.PubRepository;
 import likelion.festival.repository.UserRepository;
 import likelion.festival.utils.JwtTokenUtils;
@@ -79,13 +82,13 @@ public class AuthService {
     @Transactional
     public void adminLogin(String username, String password, HttpServletResponse response) {
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 계정을 요구하고 있습니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정을 요구하고 있습니다."));
 
         Pub pub = pubRepository.findByName(username)
-                .orElseThrow(() -> new RuntimeException("찾고 있는 주점이 없습니다."));
+                .orElseThrow(() -> new PubException("찾고 있는 주점이 없습니다."));
 
         if (!pub.getPassword().equals(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidRequestException("비밀번호가 일치하지 않습니다.");
         }
 
         String token = jwtTokenUtils.generateAccessToken(user);
