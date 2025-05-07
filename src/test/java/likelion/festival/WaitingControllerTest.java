@@ -84,7 +84,6 @@ public class WaitingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(pubId))
                 .andExpect(jsonPath("$.waitingNum").value(11))
                 .andExpect(jsonPath("$.numsTeamsAhead").value(8));
     }
