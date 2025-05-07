@@ -3,6 +3,7 @@ package likelion.festival.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -33,7 +34,8 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/images/**", "/api/lost-items/**", "/api/pubs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/lost-items/**").permitAll()
+                        .requestMatchers("/images/**", "/api/pubs/**").permitAll()
                         .requestMatchers(WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )

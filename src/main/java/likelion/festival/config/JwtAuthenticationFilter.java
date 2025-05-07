@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import likelion.festival.exceptions.JwtTokenException;
 import likelion.festival.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         for (String string : WHITELIST) {
             if (path.startsWith(string)) {
+                if (path.equals("/api/lost-items") && request.getMethod().equals("POST")) {
+                    break;
+                }
+
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -63,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         log.info(request.getRequestURI());
         log.info(request.getMethod());
-        throw new RuntimeException("token is invalid or null");
+        throw new JwtTokenException("token is invalid or null");
     }
 }
 
