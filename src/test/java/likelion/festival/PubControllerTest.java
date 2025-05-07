@@ -97,8 +97,8 @@ public class PubControllerTest {
         executor.awaitTermination(1, TimeUnit.MINUTES);
 
         Pub pub = pubRepository.findById(pubId).orElseThrow();
-        assertThat(pub.getLikeCount()).isNotEqualTo(3000L);
-        System.out.println(pub.getLikeCount());
+        assertThat(pub.getLikeCount()).isEqualTo(3000L);
+        System.out.println("total like count is : " + pub.getLikeCount());
     }
 
     @Test
