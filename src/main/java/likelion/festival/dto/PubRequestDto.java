@@ -2,9 +2,11 @@ package likelion.festival.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class PubRequestDto {
 
     @NotNull(message = "addCount는 필수 필드입니다.")

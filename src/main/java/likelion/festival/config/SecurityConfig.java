@@ -22,7 +22,9 @@ public class SecurityConfig {
             "/admin/waiting",
             "/auth/refresh",
             "/auth/admin-login",
-            "/images"
+            "/images",
+            "/api/pubs/**", // 일단 임시 방편으로 해놓은 겁니다.
+            "/api/pubs"
     };
 
     @Bean

@@ -23,8 +23,8 @@ public class PubController {
     }
 
     @PostMapping("{pubId}/likes")
-    public ResponseEntity<Void> addLike(@PathVariable Long pubId, @RequestBody PubRequestDto dto) {
+    public synchronized String addLike(@PathVariable Long pubId, @RequestBody PubRequestDto dto) {
         pubService.addPubLike(pubId, dto.getAddCount());
-        return ResponseEntity.noContent().build();
+        return "좋아요가 성공적으로 반영되었습니다";
     }
 }
