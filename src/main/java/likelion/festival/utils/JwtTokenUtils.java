@@ -77,8 +77,12 @@ public class JwtTokenUtils {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("유효하지 않은 JWT 토큰입니다.: " + e.getMessage());
+        } catch (SecurityException | MalformedJwtException | IllegalArgumentException e) {
+            throw new JwtAuthenticationException("Invalid JWT token");
+        } catch (ExpiredJwtException e) {
+            throw new JwtAuthenticationException("Expired");
+        } catch (UnsupportedJwtException e) {
+            throw new JwtAuthenticationException("Unsupported JWT token");
         }
     }
 
