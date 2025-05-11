@@ -23,8 +23,10 @@ public class PubController {
     }
 
     @PostMapping("{pubId}/likes")
-    public synchronized String addLike(@PathVariable Long pubId, @RequestBody PubRequestDto dto) {
-        pubService.addPubLike(pubId, dto.getAddCount());
+    public synchronized String addLike(@PathVariable Long pubId, @RequestBody List<PubRequestDto> dtoList) {
+        for (PubRequestDto dto : dtoList) {
+            pubService.addPubLike(dto.getPubId(), dto.getAddCount());
+        }
         return "좋아요가 성공적으로 반영되었습니다";
     }
 }

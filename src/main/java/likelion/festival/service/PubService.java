@@ -29,7 +29,7 @@ public class PubService {
     }
 
     @Transactional
-    public void addPubLike(Long pubId, Long addCount) {
+    public void addPubLike(Long pubId, Integer addCount) {
         Pub pub = pubRepository.findById(pubId)
                 .orElseThrow(() -> new EntityNotFoundException("요청한 id를 가진 주점을 찾을 수 없습니다: " + pubId));
         pub.addLikeCount(addCount);
