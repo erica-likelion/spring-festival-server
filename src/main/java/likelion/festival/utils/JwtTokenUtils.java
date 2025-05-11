@@ -22,7 +22,7 @@ public class JwtTokenUtils {
 
     private final Key key;
 
-    private long expirationTime;
+    private final long expirationTime;
 
     public JwtTokenUtils(@Value("${jwt.secret-key}") String secretKey, @Value("${jwt.expire-time}") long expirationTime) {
         this.expirationTime = expirationTime;
@@ -37,7 +37,7 @@ public class JwtTokenUtils {
                 .setHeader(createHeader())
                 .setClaims(createClaims(user))
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getEmail()))
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -50,7 +50,7 @@ public class JwtTokenUtils {
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getEmail()))
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
