@@ -42,7 +42,7 @@ public class Pub {
         return this.maxWaitingNum;
     }
 
-    public void addLikeCount(Long addCount) {
+    public void addLikeCount(Integer addCount) {
         this.likeCount += addCount;
     }
 }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.festival.domain.User;
+import likelion.festival.exceptions.JwtAuthenticationException;
 import likelion.festival.exceptions.JwtTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class JwtTokenUtils {
 
     private final Key key;
 
-    private long expirationTime;
+    private final long expirationTime;
 
     public JwtTokenUtils(@Value("${jwt.secret-key}") String secretKey, @Value("${jwt.expire-time}") long expirationTime) {
         this.expirationTime = expirationTime;
@@ -36,7 +37,7 @@ public class JwtTokenUtils {
                 .setHeader(createHeader())
                 .setClaims(createClaims(user))
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getEmail()))
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -49,7 +50,7 @@ public class JwtTokenUtils {
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setIssuedAt(now)
-                .setSubject(String.valueOf(user.getEmail()))
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -61,7 +62,7 @@ public class JwtTokenUtils {
         }
 
         for (Cookie cookie : request.getCookies()) {
-            if ("refresh_token".equals(cookie.getName())) {
+            if ("refreshToken".equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }
@@ -76,14 +77,12 @@ public class JwtTokenUtils {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            throw new JwtTokenException("Invalid JWT token");
+        } catch (SecurityException | MalformedJwtException | IllegalArgumentException e) {
+            throw new JwtAuthenticationException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
-            throw new JwtTokenException("Expired");
+            throw new JwtAuthenticationException("Expired");
         } catch (UnsupportedJwtException e) {
-            throw new JwtTokenException("Unsupported JWT token");
-        } catch (IllegalArgumentException e) {
-            throw new JwtTokenException("Invalid JWT token");
+            throw new JwtAuthenticationException("Unsupported JWT token");
         }
     }
 
