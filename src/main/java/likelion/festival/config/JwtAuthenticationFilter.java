@@ -16,9 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,26 +29,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
     private final UserDetailsService userDetailsService;
-    String[] WHITELIST = SecurityConfig.WHITELIST;
+
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final List<WhitelistEntry> WHITELIST = SecurityConfig.WHITELIST;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        String path = request.getRequestURI();
-
-        for (String string : WHITELIST) {
-            if (path.startsWith(string)) {
-                if (path.equals("/api/lost-items") && request.getMethod().equals("POST")) {
-                    break;
-                }
-
-                filterChain.doFilter(request, response);
-                return;
-            }
-        }
-
         try {
             String token = resolveToken(request);
 
@@ -72,13 +62,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+
+        return WHITELIST.stream()
+                .anyMatch(entry -> pathMatcher.match(entry.getPath(), path)
+                        && entry.getMethod().matches(method));
+    }
+
     private String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
         if (bearer != null && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
-        //log.info(request.getRequestURI());
-        //log.info(request.getMethod());
         throw new JwtAuthenticationException("토큰이 존재하지 않거나, 잘 못 된 형식입니다.");
     }
 }
