@@ -23,7 +23,7 @@ public class PubController {
     }
 
     @PostMapping("/like")
-    public synchronized ResponseEntity<List<PubResponseDto>> addLike(@PathVariable Long pubId, @RequestBody List<PubRequestDto> dtoList) {
+    public synchronized ResponseEntity<List<PubResponseDto>> addLike(@RequestBody List<PubRequestDto> dtoList) {
         for (PubRequestDto dto : dtoList) {
             pubService.addPubLike(dto.getPubId(), dto.getAddCount());
         }
