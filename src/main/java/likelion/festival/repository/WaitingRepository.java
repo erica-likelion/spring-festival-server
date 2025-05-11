@@ -13,7 +13,7 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
     @Query("SELECT new likelion.festival.dto.MyWaitingList(" +
             "w.id, " +
             "p.maxWaitingNum - p.enterNum, " +
-            "p.enterNum - w.waitingNum, " +
+            "w.waitingNum - p.enterNum, " +
             "p.id, " +
             "w.visitorCount) " +
             "FROM Waiting w " +

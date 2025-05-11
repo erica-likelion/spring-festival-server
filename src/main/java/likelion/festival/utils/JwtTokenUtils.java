@@ -62,7 +62,7 @@ public class JwtTokenUtils {
         }
 
         for (Cookie cookie : request.getCookies()) {
-            if ("refresh_token".equals(cookie.getName())) {
+            if ("refreshToken".equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

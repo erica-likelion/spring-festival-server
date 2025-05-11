@@ -2,6 +2,8 @@ package likelion.festival.domain;
 
 import jakarta.persistence.*;
 import likelion.festival.enums.WaitingStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
