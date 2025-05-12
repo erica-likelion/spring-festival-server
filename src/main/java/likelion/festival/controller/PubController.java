@@ -22,9 +22,12 @@ public class PubController {
         return ResponseEntity.ok(pubs);
     }
 
-    @PostMapping("{pubId}/likes")
-    public synchronized String addLike(@PathVariable Long pubId, @RequestBody PubRequestDto dto) {
-        pubService.addPubLike(pubId, dto.getAddCount());
-        return "좋아요가 성공적으로 반영되었습니다";
+    @PostMapping("/like")
+    public synchronized ResponseEntity<List<PubResponseDto>> addLike(@RequestBody List<PubRequestDto> dtoList) {
+        for (PubRequestDto dto : dtoList) {
+            pubService.addPubLike(dto.getPubId(), dto.getAddCount());
+        }
+        List<PubResponseDto> pubs = pubService.getPubRanks();
+        return ResponseEntity.ok(pubs);
     }
 }

@@ -9,7 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PubRequestDto {
 
+    @NotNull(message = "pubId는 필수 필드입니다.")
+    private Long pubId;
+
     @NotNull(message = "addCount는 필수 필드입니다.")
     @Positive(message = "addCount는 반드시 양수로 입력해야합니다.")
-    private Long addCount;
+    private Integer addCount;
 }
