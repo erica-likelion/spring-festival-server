@@ -18,6 +18,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -63,7 +65,8 @@ public class PubControllerTest {
 
     @Test
     void testAddLikeWithConcurrentIssue() throws Exception {
-        PubRequestDto requestDto = new PubRequestDto(10L);
+        PubRequestDto requestDto = new PubRequestDto(pubId, 10);
+        List<PubRequestDto> requestList = List.of(requestDto);
 
         int threadCount = 10;
         int iterations = 30;
@@ -75,9 +78,9 @@ public class PubControllerTest {
         Runnable task = () -> {
             for (int i = 0; i < iterations; i++) {
                 try {
-                    mockMvc.perform(post("/api/pubs/" + pubId.intValue() + "/likes")
+                    mockMvc.perform(post("/api/pubs/like")
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .content(objectMapper.writeValueAsString(requestDto)))
+                                    .content(objectMapper.writeValueAsString(requestList)))
                             .andExpect(status().isOk());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -97,18 +100,20 @@ public class PubControllerTest {
         executor.awaitTermination(1, TimeUnit.MINUTES);
 
         Pub pub = pubRepository.findById(pubId).orElseThrow();
-        assertThat(pub.getLikeCount()).isEqualTo(3000L);
+        assertThat(pub.getLikeCount()).isEqualTo(3000);
         System.out.println("total like count is : " + pub.getLikeCount());
     }
 
     @Test
     void testAddLike() throws Exception {
-        PubRequestDto requestDto = new PubRequestDto(10L);
-        mockMvc.perform(post("/api/pubs/" + pubId.intValue() + "/likes")
+        PubRequestDto requestDto = new PubRequestDto(pubId,10);
+        List<PubRequestDto> requestList = List.of(requestDto);
+        mockMvc.perform(post("/api/pubs/like")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .content(objectMapper.writeValueAsString(requestList)))
                 .andExpect(status().isOk());
 
-        assertThat(testPub.getLikeCount()).isEqualTo(10L);
+        Pub updatedPub = pubRepository.findById(pubId).orElseThrow();
+        assertThat(updatedPub.getLikeCount()).isEqualTo(10);
     }
 }
