@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -20,14 +21,15 @@ public class ImageService {
         }
 
         try {
+            String dateFolder = LocalDate.now().toString();
             String extension = getExtension(file.getOriginalFilename());
             String filename = UUID.randomUUID() + "_" + extension;
-            Path savePath = Paths.get(uploadDir, filename);
+            Path savePath = Paths.get(uploadDir, dateFolder, filename);
 
             Files.createDirectories(savePath.getParent());
             file.transferTo(savePath);
 
-            return baseUrl + filename;
+            return baseUrl + dateFolder + "/" + filename;
 
         } catch (IOException e) {
             throw new RuntimeException("이미지 저장 실패");
