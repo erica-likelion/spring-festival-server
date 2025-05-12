@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import likelion.festival.domain.User;
 import likelion.festival.exceptions.JwtAuthenticationException;
 import likelion.festival.exceptions.JwtTokenException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +78,8 @@ public class JwtTokenUtils {
                     .build()
                     .parseClaimsJws(token);
             return true;
+        } catch (SignatureException e) {
+            throw new JwtAuthenticationException("토큰이 조작, 변조되었습니다.");
         } catch (SecurityException | MalformedJwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
