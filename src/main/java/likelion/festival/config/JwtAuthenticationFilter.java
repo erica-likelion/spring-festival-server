@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.exceptions.JwtAuthenticationException;
 import likelion.festival.exceptions.JwtTokenException;
+import likelion.festival.exceptions.UserNotFoundException;
 import likelion.festival.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-        } catch (AuthenticationException ex) {
+        } catch (AuthenticationException | UserNotFoundException ex) {
             SecurityContextHolder.clearContext();
             response.setContentType("application/json; charset=UTF-8");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
