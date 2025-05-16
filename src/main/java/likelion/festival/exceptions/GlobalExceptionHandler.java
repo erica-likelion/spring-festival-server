@@ -1,6 +1,5 @@
 package likelion.festival.exceptions;
 
-import likelion.festival.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -8,8 +7,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.lang.reflect.Method;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -68,5 +65,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleRequestParamError(MissingServletRequestParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 쿼리 파라미터 " + ex.getParameterName() + " 가 전달되지 않았습니다.");
+    }
+
+    @ExceptionHandler(AdminPermissionException.class)
+    public ResponseEntity<String> handleAdminPermission(AdminPermissionException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 }
