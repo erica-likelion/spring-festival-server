@@ -24,7 +24,6 @@ public class SecurityConfig {
             new WhitelistEntry(HttpMethod.GET, "/auth/login/kakao/auth-code"),
             new WhitelistEntry(HttpMethod.GET, "/error"),
             new WhitelistEntry(HttpMethod.GET, "/admin/waiting"),
-            new WhitelistEntry(HttpMethod.POST, "/admin/waiting"),
             new WhitelistEntry(HttpMethod.DELETE, "/admin/waiting"),
             new WhitelistEntry(HttpMethod.POST, "/auth/refresh"),
             new WhitelistEntry(HttpMethod.POST, "/auth/admin-login"),
