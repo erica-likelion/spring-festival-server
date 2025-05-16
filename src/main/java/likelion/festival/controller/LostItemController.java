@@ -2,8 +2,7 @@ package likelion.festival.controller;
 
 import jakarta.validation.Valid;
 import likelion.festival.domain.LostItem;
-import likelion.festival.dto.LostItemDetailResponseDto;
-import likelion.festival.dto.LostItemListResponseDto;
+import likelion.festival.dto.LostItemResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
 import likelion.festival.exceptions.InvalidRequestException;
 import likelion.festival.service.LostItemService;
@@ -24,8 +23,8 @@ public class LostItemController {
     private final LostItemService lostItemService;
 
     @GetMapping
-    public ResponseEntity<List<LostItemListResponseDto>> getLostItems(@RequestParam String lostDate, @RequestParam(required = false) String name) {
-        List<LostItemListResponseDto>lostItems;
+    public ResponseEntity<List<LostItemResponseDto>> getLostItems(@RequestParam String lostDate, @RequestParam(required = false) String name) {
+        List<LostItemResponseDto>lostItems;
 
         validateFestivalDate(lostDate);
 
@@ -35,12 +34,6 @@ public class LostItemController {
             lostItems = lostItemService.findByLostDateAndName(lostDate, name);
         }
         return ResponseEntity.ok(lostItems);
-    }
-
-    @GetMapping("/{lostItemId}")
-    public ResponseEntity<LostItemDetailResponseDto> getLostItemDetail(@PathVariable Long lostItemId) {
-        LostItemDetailResponseDto dto = lostItemService.findLostItem(lostItemId);
-        return ResponseEntity.ok(dto);
     }
 
     @PostMapping
