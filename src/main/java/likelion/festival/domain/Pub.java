@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,10 +33,10 @@ public class Pub {
     private String password;
 
     @OneToMany(mappedBy = "pub", cascade = CascadeType.REMOVE)
-    private List<Waiting> waitingList;
+    private Set<Waiting> waitingList;
 
     @OneToMany(mappedBy = "pub", cascade = CascadeType.REMOVE)
-    private List<GuestWaiting> guestWaitingList;
+    private Set<GuestWaiting> guestWaitingList;
 
     public Integer addWaitingNum() {
         this.maxWaitingNum += 1;
