@@ -19,24 +19,19 @@ import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
 
-    @GetMapping("/auth/login/kakao/auth-code")
-    public ResponseEntity<String> getAuthCode(@ModelAttribute AuthCodeRequestDto authCodeResponseDto, HttpServletResponse response){
-
-        if (authCodeResponseDto.getError() != null) {
-            URI redirectUri = URI.create("https://spring-festival-testing.vercel.app/login?error=" + URLEncoder.encode(authCodeResponseDto.getError(), StandardCharsets.UTF_8));
-            return ResponseEntity.status(HttpStatus.FOUND).location(redirectUri).build();
-        }
-
+    @PostMapping("/kakao/login")
+    public ResponseEntity<String> getAuthCode(@RequestBody AuthCodeRequestDto authCodeResponseDto, HttpServletResponse response){
         authService.doLoginProcess(authCodeResponseDto.getCode(), response);
         return ResponseEntity.ok().body("Login successful");
     }
 
-    @PostMapping("/auth/refresh")
+    @PostMapping("/refresh")
     public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenUtils.getRefreshToken(request);
         Long userId = Long.valueOf(jwtTokenUtils.getClaims(refreshToken).getSubject());
@@ -47,7 +42,7 @@ public class AuthController {
         return "Token refreshed";
     }
 
-    @PostMapping("/auth/admin-login")
+    @PostMapping("/admin-login")
     public ResponseEntity<String> adminLogin(@RequestBody AdminLoginDto dto, HttpServletResponse response) {
         authService.adminLogin(dto.getUsername(), dto.getPassword(), response);
         return ResponseEntity.ok("관리자 로그인이 완료되었습니다.");

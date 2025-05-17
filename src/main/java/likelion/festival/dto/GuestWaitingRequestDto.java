@@ -9,9 +9,6 @@ import lombok.Getter;
 @Getter
 public class GuestWaitingRequestDto {
 
-    @NotNull(message = "pubId는 필수 입력 속성입니다.")
-    private Long pubId;
-
     @NotNull(message = "visitorCount는 필수 입력 속성입니다.")
     private Integer visitorCount;
 
