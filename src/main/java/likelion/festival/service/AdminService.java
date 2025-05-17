@@ -13,6 +13,7 @@ import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.FcmTokenRequest;
 import likelion.festival.exceptions.AdminPermissionException;
 import likelion.festival.exceptions.EntityNotFoundException;
+import likelion.festival.exceptions.InvalidRequestException;
 import likelion.festival.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -72,7 +73,7 @@ public class AdminService {
         } else if (adminDeleteDto.getType().equals("WalkIn")) {
             guestWaitingService.deleteGuestWaiting(adminDeleteDto.getId());
         } else {
-            throw new RuntimeException("Invalid waiting type");
+            throw new InvalidRequestException("type 을 잘 못 전달했습니다. Online, WalkIn 중에 하나로 입력해주세요.");
         }
     }
 
