@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public static final List<WhitelistEntry> WHITELIST = List.of(
-            new WhitelistEntry(HttpMethod.POST, "/kakao/login"),
+            new WhitelistEntry(HttpMethod.POST, "/auth/kakao/login"),
             new WhitelistEntry(HttpMethod.GET, "/error"),
             new WhitelistEntry(HttpMethod.POST, "/auth/refresh"),
             new WhitelistEntry(HttpMethod.POST, "/auth/admin-login"),
