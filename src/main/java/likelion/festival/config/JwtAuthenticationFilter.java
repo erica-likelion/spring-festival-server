@@ -60,6 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setContentType("application/json; charset=UTF-8");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(ex.getMessage());
+            return; // 없으면 인증되지 않아도 controller 과정으로 넘어가게 됨
         }
     }
 

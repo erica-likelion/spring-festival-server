@@ -22,6 +22,11 @@ public class PubService {
         return pubRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("No pub with id: " + id));
     }
 
+    public Pub getPubByName(String name) {
+        return pubRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("해당 이름을 가진 주점이 존재하지 않습니다.: " + name));
+    }
+
     public List<PubResponseDto> getPubRanks() {
         List<Pub> pubs = pubRepository.findAllByOrderByLikeCountDesc();
         return pubs.stream().map(pub -> new PubResponseDto(pub))
