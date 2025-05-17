@@ -3,7 +3,6 @@ package likelion.festival.service;
 import likelion.festival.domain.LostItem;
 import likelion.festival.dto.LostItemResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
-import likelion.festival.exceptions.EntityNotFoundException;
 import likelion.festival.repository.LostItemRepository;
 import likelion.festival.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +20,20 @@ public class LostItemService {
     private final UserRepository userRepository;
     private final ImageService imageService;
 
+    public List<LostItemResponseDto> allLostItem() {
+        List<LostItem> lostItems = lostItemRepository.findAll();
+        return lostItems.stream().map(lostItem -> new LostItemResponseDto(lostItem))
+                .toList();
+    }
+
     public List<LostItemResponseDto> findByLostDate(String lostDate) {
         List<LostItem> lostItems = lostItemRepository.findByFoundDate(lostDate);
+        return lostItems.stream().map(lostItem -> new LostItemResponseDto(lostItem))
+                .toList();
+    }
+
+    public List<LostItemResponseDto> findByName(String name) {
+        List<LostItem> lostItems = lostItemRepository.findByNameContaining(name);
         return lostItems.stream().map(lostItem -> new LostItemResponseDto(lostItem))
                 .toList();
     }
