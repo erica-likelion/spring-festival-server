@@ -82,8 +82,8 @@ public class WaitingService {
 
     private MyWaitingList convertToDto(Waiting waiting) {
         Pub pub = pubRepository.findPubWithWaitingsAndGuestWaitings(waiting.getPub().getId());
-        List<Waiting> pubWaitings = pub.getWaitingList();
-        List<GuestWaiting> pubGuestWaitings = pub.getGuestWaitingList();
+        Set<Waiting> pubWaitings = pub.getWaitingList();
+        Set<GuestWaiting> pubGuestWaitings = pub.getGuestWaitingList();
 
         int totalTeams = pubWaitings.size() + pubGuestWaitings.size();
         long aheadCount = calculateAheadCount(waiting.getCreatedAt(), pub);
