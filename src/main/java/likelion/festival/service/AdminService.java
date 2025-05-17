@@ -62,7 +62,7 @@ public class AdminService {
         } else if (adminDeleteDto.getType().equals("WalkIn")) {
             guestWaitingService.deleteGuestWaiting(adminDeleteDto.getId());
         } else {
-            throw new RuntimeException("Invalid waiting type");
+            throw new InvalidRequestException("type 을 잘 못 전달했습니다. Online, WalkIn 중에 하나로 입력해주세요.");
         }
     }
 
