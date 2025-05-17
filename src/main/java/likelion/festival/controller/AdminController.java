@@ -33,8 +33,8 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<AdminWaitingList> getWaitingList(@RequestParam Long pubId) {
-        return adminService.getWaitingList(pubId);
+    public List<AdminWaitingList> getWaitingList() {
+        return adminService.getWaitingList();
     }
 
     @PostMapping
