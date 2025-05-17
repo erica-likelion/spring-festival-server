@@ -23,15 +23,23 @@ public class LostItemController {
     private final LostItemService lostItemService;
 
     @GetMapping
-    public ResponseEntity<List<LostItemResponseDto>> getLostItems(@RequestParam String lostDate, @RequestParam(required = false) String name) {
+    public ResponseEntity<List<LostItemResponseDto>> getLostItems(@RequestParam(required = false) String lostDate, @RequestParam(required = false) String name) {
         List<LostItemResponseDto>lostItems;
 
         validateFestivalDate(lostDate);
 
-        if (name == null || name.isBlank()) { // 모든 분실물을 반환
-            lostItems = lostItemService.findByLostDate(lostDate);
+        if (lostDate == null) {
+            if (name == null) { // 모든 분실물 반환
+                lostItems = lostItemService.allLostItem();
+            } else { // 검색어만 있을때
+                lostItems = lostItemService.findByName(name);
+            }
         } else {
-            lostItems = lostItemService.findByLostDateAndName(lostDate, name);
+            if (name == null) { // 분실 날짜만 있음
+                lostItems = lostItemService.findByLostDate(lostDate);
+            } else { // 날짜, 검색어 모두 있음
+                lostItems = lostItemService.findByLostDateAndName(lostDate, name);
+            }
         }
         return ResponseEntity.ok(lostItems);
     }
@@ -51,8 +59,8 @@ public class LostItemController {
 
     private void validateFestivalDate(String date) {
         List<String> possibleDates = Arrays.asList("1일차", "2일차", "3일차");
-        if (!possibleDates.contains(date)) {
-            throw new InvalidRequestException("foundDate는 ['1일차', '2일차', '3일차'] 중 하나를 입력해야합니다.");
+        if (date != null && !possibleDates.contains(date)) {
+            throw new InvalidRequestException("lostDate는 ['1일차', '2일차', '3일차'] 중 하나를 입력해야합니다.");
         }
     }
 }
