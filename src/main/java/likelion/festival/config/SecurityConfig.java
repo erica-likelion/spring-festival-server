@@ -42,7 +42,7 @@ public class SecurityConfig {
                     }
                     requests.anyRequest().authenticated();
                 })
-                .cors(AbstractHttpConfigurer::disable)
+                //.cors(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors
                         .configurationSource(CorsConfig.corsConfigurationSource())
                 )
