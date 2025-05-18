@@ -71,8 +71,11 @@ public class AdminService {
     @Transactional
     public String deleteWaitingAndReturnFcmToken(Long waitingId) {
         Waiting waiting = waitingService.getWaiting(waitingId);
-        User user = waiting.getUser();
+
+        pubService.updateEnterNum(waiting.getWaitingNum(), waiting.getPub().getId());
+
         waitingRepository.delete(waiting);
+        User user = waiting.getUser();
         return user.getFcmToken();
     }
 

@@ -44,6 +44,7 @@ public class GuestWaitingService {
     public void deleteGuestWaiting(Long guestWaitingId) {
         GuestWaiting guestWaiting = guestWaitingRepository.findById(guestWaitingId)
                 .orElseThrow(() -> new EntityNotFoundException("WalkIn Waiting is not found given id " + guestWaitingId));
+        pubService.updateEnterNum(guestWaiting.getWaitingNum(), guestWaiting.getPub().getId());
         guestWaitingRepository.delete(guestWaiting);
     }
 }
