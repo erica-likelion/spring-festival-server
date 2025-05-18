@@ -1,6 +1,8 @@
 package likelion.festival.utils;
 
+import likelion.festival.dto.KakaoTokenResponse;
 import likelion.festival.dto.KakaoUserInfo;
+import likelion.festival.exceptions.InvalidRequestException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @Getter
@@ -27,7 +30,7 @@ public class KakaoUtils {
     private final WebClient webClient = WebClient.builder().build();
 
     public String getAccessToken(String code) {
-        return webClient.post()
+        KakaoTokenResponse tokenResponse = webClient.post()
                 .uri(tokenUri)
                 .header(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8")
                 .body(BodyInserters.fromFormData("grant_type", "authorization_code")
@@ -35,10 +38,14 @@ public class KakaoUtils {
                         .with("redirect_uri", redirectUri)
                         .with("code", code))
                 .retrieve()
-                .bodyToMono(Map.class)
-                .block()
-                .get("access_token")
-                .toString();
+                .bodyToMono(KakaoTokenResponse.class)
+                .block();
+
+        if (tokenResponse == null || tokenResponse.getAccessToken() == null) {
+            throw new InvalidRequestException("카카로 로그인 과정 중에 문제가 발생했습니다. (카카오 엑세스 토큰 문제)");
+        }
+
+        return tokenResponse.getAccessToken();
     }
 
     public KakaoUserInfo getUserInfo(String accessToken) {
