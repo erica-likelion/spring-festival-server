@@ -14,12 +14,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")  // 모든 경로에 대해
-                .allowedOrigins("http://localhost:3000") // 프론트 주소
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true); // 프론트에서 쿠키 등을 보내려면 true
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")  // 모든 경로에 대해
+//                .allowedOrigins("http://localhost:3000") // 프론트 주소
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//                .allowedHeaders("*")
+//                .allowCredentials(true); // 프론트에서 쿠키 등을 보내려면 true
+//    }
 }
