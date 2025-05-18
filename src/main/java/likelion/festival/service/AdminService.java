@@ -35,17 +35,8 @@ public class AdminService {
     private final WaitingRepository waitingRepository;
     private final PubService pubService;
 
-    public List<AdminWaitingList> getWaitingList() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isAdmin) {
-            throw new AdminPermissionException("관리자 권한이 없습니다. 관리자 계정으로 로그인해주세요.");
-        }
-        String name = userDetails.getUsername();
-        Pub pub = pubService.getPubByName(name);
+    public List<AdminWaitingList> getWaitingList(String pubName) {;
+        Pub pub = pubService.getPubByName(pubName);
 
         List<AdminWaitingList> adminWaitingList = new ArrayList<>();
         adminWaitingList.addAll(waitingService.getAdminWaitingList(pub.getId()));
