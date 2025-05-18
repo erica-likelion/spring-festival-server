@@ -88,6 +88,6 @@ public class AdminService {
     private void sendDeletedWaitingMessage(String token) {
         fcmService.sendFcmMessage(token,
                 "한양대 에리카 봄 축제",
-                "주점에 노쇼하셔서 웨이팅이 취소되었습니다.");
+                "주점에 방문하지 않아서 웨이팅이 취소되었습니다.");
     }
 }
