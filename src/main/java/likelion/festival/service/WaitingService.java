@@ -53,7 +53,6 @@ public class WaitingService {
     public Waiting save(WaitingRequestDto waitingRequestDto, Integer waitingNum, User user, Pub pub) {
         return waitingRepository.save(new Waiting(waitingRequestDto.getVisitorCount(),
                 waitingRequestDto.getPhoneNumber(),
-                waitingRequestDto.getPubName(),
                 waitingNum,
                 user,
                 pub));

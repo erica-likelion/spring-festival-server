@@ -10,7 +10,5 @@ public class WaitingRequestDto {
 
     private String phoneNumber;
 
-    private String pubName;
-
     private Long pubId;
 }
