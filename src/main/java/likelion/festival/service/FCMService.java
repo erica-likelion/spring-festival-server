@@ -11,13 +11,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly=true)
 @RequiredArgsConstructor
 public class FCMService {
     private final UserService userService;
+    private final UserRepository userRepository;
     private final WaitingService waitingService;
-    private final GuestWaitingService guestWaitingService;
 
     @Transactional
     public void saveUserFcmToken(Long userId, String fcmToken) {
@@ -32,6 +34,15 @@ public class FCMService {
         } else {
             throw new RuntimeException("Invalid waiting type");
         }
+    }
+
+    public void sendAllUserConcertAlarm(String artistName) {
+        List<String> fcmTokenList = userRepository.findAllFcmTokens();
+        fcmTokenList.forEach(token -> {
+            sendFcmMessage(token,
+                    "한양대 에리카 봄 축제",
+                    artistName + "의 공연이 이제 시작합니다!");
+        });
     }
 
     public void sendFcmMessage(String token, String title, String body){

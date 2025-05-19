@@ -8,16 +8,12 @@ import likelion.festival.dto.WaitingAlarmRequest;
 import likelion.festival.service.FCMService;
 import likelion.festival.service.WaitingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 public class FCMController {
     private final FCMService fcmService;
-    private final WaitingService waitingService;
 
     @PostMapping("{userId}/fcm/token")
     public String getFcmToken(@PathVariable Long userId, @Valid @RequestBody FcmTokenRequest fcmTokenRequest) {
@@ -32,6 +28,12 @@ public class FCMController {
         fcmService.sendFcmMessage(user.getFcmToken(),
                 "한양대 에리카 봄 축제",
                 waitingAlarmRequest.getPubName() + "의 웨이팅이 얼마 남지 않았습니다. 근처에서 기다려주세요!");
+        return "Send FCM Message Successfully";
+    }
+
+    @PostMapping("/concert/alarm")
+    public String sendConcertAlarm(@RequestParam String artistName) {
+        fcmService.sendAllUserConcertAlarm(artistName);
         return "Send FCM Message Successfully";
     }
 }
