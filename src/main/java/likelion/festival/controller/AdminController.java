@@ -1,14 +1,19 @@
 package likelion.festival.controller;
 
 import jakarta.validation.Valid;
+import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.GuestWaiting;
+import likelion.festival.domain.User;
 import likelion.festival.dto.AdminDeleteDto;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
 import likelion.festival.dto.GuestWaitingResponseDto;
+import likelion.festival.enums.RoleType;
+import likelion.festival.exceptions.AdminPermissionException;
 import likelion.festival.service.AdminService;
 import likelion.festival.service.GuestWaitingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +38,14 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<AdminWaitingList> getWaitingList() {
-        return adminService.getWaitingList();
+    public List<AdminWaitingList> getWaitingList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+
+        if (user.getRole() != RoleType.ROLE_ADMIN) {
+            throw new AdminPermissionException("관리자 권한이 없습니다. 관리자 계정으로 로그인해주세요.");
+        }
+
+        return adminService.getWaitingList(user);
     }
 
     @PostMapping
