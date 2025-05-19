@@ -3,6 +3,7 @@ package likelion.festival.service;
 import likelion.festival.domain.LostItem;
 import likelion.festival.dto.LostItemResponseDto;
 import likelion.festival.dto.LostItemRequestDto;
+import likelion.festival.exceptions.InvalidRequestException;
 import likelion.festival.repository.LostItemRepository;
 import likelion.festival.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -18,7 +20,7 @@ import java.util.List;
 public class LostItemService {
     private final LostItemRepository lostItemRepository;
     private final UserRepository userRepository;
-    private final ImageService imageService;
+    private final NcpObjectStorageService ncpObjectStorageService;
 
     public List<LostItemResponseDto> allLostItem() {
         List<LostItem> lostItems = lostItemRepository.findAll();
@@ -46,10 +48,15 @@ public class LostItemService {
 
     @Transactional
     public LostItem addLostItem(LostItemRequestDto dto, MultipartFile image) {
-        String imageUrl = imageService.saveImage(image);
+        String imageKey;
+        try {
+            imageKey = ncpObjectStorageService.uploadImage(image);
+        } catch (IOException e) {
+            throw new InvalidRequestException("이미지 업로드에 실패했습니다.");
+        }
 
         LostItem lostItem = new LostItem(
-                imageUrl,
+                imageKey,
                 dto.getName(),
                 dto.getDescription(),
                 dto.getStaffNotified(),
