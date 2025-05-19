@@ -1,9 +1,6 @@
 package likelion.festival.domain;
 
 import jakarta.persistence.*;
-import likelion.festival.enums.WaitingStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,9 +17,6 @@ public class Waiting {
     private LocalDateTime createdAt;
 
     private Integer visitorCount;
-
-    @Enumerated(EnumType.STRING)
-    private WaitingStatus waitingStatus;
 
     private String phoneNumber;
 
@@ -44,7 +38,6 @@ public class Waiting {
         this.pubName = pubName;
         this.waitingNum = waitingNum;
         this.createdAt = LocalDateTime.now();
-        this.waitingStatus = WaitingStatus.Wait;
         this.user = user;
         this.pub = pub;
     }
