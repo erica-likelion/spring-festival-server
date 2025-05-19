@@ -71,4 +71,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAdminPermission(AdminPermissionException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
+
+    @ExceptionHandler(JwtExpiredException.class)
+    public ResponseEntity<String> handleExpiredJwt(JwtExpiredException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ex.getMessage());
+    }
 }

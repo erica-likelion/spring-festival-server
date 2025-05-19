@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.festival.domain.User;
 import likelion.festival.exceptions.JwtAuthenticationException;
+import likelion.festival.exceptions.JwtExpiredException;
 import likelion.festival.exceptions.JwtTokenException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,7 +84,7 @@ public class JwtTokenUtils {
         } catch (SecurityException | MalformedJwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
-            throw new JwtAuthenticationException("Expired");
+            throw new JwtExpiredException("토큰이 만료되었습니다.");
         } catch (UnsupportedJwtException e) {
             throw new JwtAuthenticationException("Unsupported JWT token");
         }
