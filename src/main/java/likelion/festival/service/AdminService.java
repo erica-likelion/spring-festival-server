@@ -35,17 +35,8 @@ public class AdminService {
     private final WaitingRepository waitingRepository;
     private final PubService pubService;
 
-    public List<AdminWaitingList> getWaitingList() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isAdmin) {
-            throw new AdminPermissionException("관리자 권한이 없습니다. 관리자 계정으로 로그인해주세요.");
-        }
-        String name = userDetails.getUsername();
-        Pub pub = pubService.getPubByName(name);
+    public List<AdminWaitingList> getWaitingList(String pubName) {;
+        Pub pub = pubService.getPubByName(pubName);
 
         List<AdminWaitingList> adminWaitingList = new ArrayList<>();
         adminWaitingList.addAll(waitingService.getAdminWaitingList(pub.getId()));
@@ -80,8 +71,11 @@ public class AdminService {
     @Transactional
     public String deleteWaitingAndReturnFcmToken(Long waitingId) {
         Waiting waiting = waitingService.getWaiting(waitingId);
-        User user = waiting.getUser();
+
+        pubService.updateEnterNum(waiting.getWaitingNum(), waiting.getPub().getId());
+
         waitingRepository.delete(waiting);
+        User user = waiting.getUser();
         return user.getFcmToken();
     }
 
@@ -94,6 +88,6 @@ public class AdminService {
     private void sendDeletedWaitingMessage(String token) {
         fcmService.sendFcmMessage(token,
                 "한양대 에리카 봄 축제",
-                "주점에 노쇼하셔서 웨이팅이 취소되었습니다.");
+                "주점에 방문하지 않아서 웨이팅이 취소되었습니다.");
     }
 }

@@ -24,19 +24,9 @@ public class GuestWaitingService {
     private final PubService pubService;
 
     @Transactional
-    public GuestWaiting addGuestWaiting(GuestWaitingRequestDto guestWaitingRequestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+    public GuestWaiting addGuestWaiting(GuestWaitingRequestDto guestWaitingRequestDto, String pubName) {
 
-        if (!isAdmin) {
-            throw new AdminPermissionException("관리자 계정만 현장 예약을 추가할 수 있습니다.");
-        }
-
-        String name = userDetails.getUsername();
-
-        Pub pub = pubService.getPubByName(name);
+        Pub pub = pubService.getPubByName(pubName);
 
         return guestWaitingRepository.save(
                 new GuestWaiting(guestWaitingRequestDto.getVisitorCount(),
@@ -54,6 +44,7 @@ public class GuestWaitingService {
     public void deleteGuestWaiting(Long guestWaitingId) {
         GuestWaiting guestWaiting = guestWaitingRepository.findById(guestWaitingId)
                 .orElseThrow(() -> new EntityNotFoundException("WalkIn Waiting is not found given id " + guestWaitingId));
+        pubService.updateEnterNum(guestWaiting.getWaitingNum(), guestWaiting.getPub().getId());
         guestWaitingRepository.delete(guestWaiting);
     }
 }

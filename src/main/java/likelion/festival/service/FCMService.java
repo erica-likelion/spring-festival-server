@@ -6,6 +6,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import likelion.festival.domain.User;
 import likelion.festival.domain.Waiting;
+import likelion.festival.exceptions.InvalidRequestException;
 import likelion.festival.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class FCMService {
         if (type.equals("Online")) {
             return waitingService.getWaitingById(waitingId).getUser();
         } else {
-            throw new RuntimeException("Invalid waiting type");
+            throw new InvalidRequestException("Invalid waiting type");
         }
     }
 

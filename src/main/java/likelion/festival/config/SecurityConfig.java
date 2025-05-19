@@ -42,10 +42,10 @@ public class SecurityConfig {
                     }
                     requests.anyRequest().authenticated();
                 })
-                .cors(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors
-//                        .configurationSource(CorsConfig.corsConfigurationSource())
-//                )
+                //.cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors
+                        .configurationSource(CorsConfig.corsConfigurationSource())
+                )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
