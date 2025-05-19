@@ -3,6 +3,7 @@ package likelion.festival.service;
 import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.GuestWaiting;
 import likelion.festival.domain.Pub;
+import likelion.festival.domain.User;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
 import likelion.festival.exceptions.AdminPermissionException;
@@ -24,19 +25,8 @@ public class GuestWaitingService {
     private final PubService pubService;
 
     @Transactional
-    public GuestWaiting addGuestWaiting(GuestWaitingRequestDto guestWaitingRequestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isAdmin) {
-            throw new AdminPermissionException("관리자 계정만 현장 예약을 추가할 수 있습니다.");
-        }
-
-        String name = userDetails.getUsername();
-
-        Pub pub = pubService.getPubByName(name);
+    public GuestWaiting addGuestWaiting(GuestWaitingRequestDto guestWaitingRequestDto, User user) {
+        Pub pub = pubService.getPubByName(user.getEmail());
 
         return guestWaitingRepository.save(
                 new GuestWaiting(guestWaitingRequestDto.getVisitorCount(),
