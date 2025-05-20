@@ -10,15 +10,8 @@ import java.util.List;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
-//    @Query("SELECT new likelion.festival.dto.MyWaitingList(" +
-//            "w.waitingNum" +
-//            "w.waitingNum - p.enterNum, " +
-//            "p.id, " +
-//            "w.visitorCount) " +
-//            "FROM Waiting w " +
-//            "JOIN w.pub p " +
-//            "WHERE w.user.id = :userId")
-//    List<MyWaitingList> findWaitingListByUserId(Long userId);
+    @Query("SELECT w FROM Waiting w WHERE w.user.id = :userId")
+    List<Waiting> findWaitingListByUserId(Long userId);
 
     @Query("SELECT new likelion.festival.dto.AdminWaitingList(" +
             "w. id," +
