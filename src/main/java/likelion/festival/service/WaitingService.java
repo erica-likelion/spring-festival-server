@@ -35,7 +35,7 @@ public class WaitingService {
 
     @Transactional
     public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto){
-        List<Waiting> waitingList = user.getWaitingList();
+        List<Waiting> waitingList = waitingRepository.findWaitingListByUserId(user.getId());
         if (waitingList != null && waitingList.size() == 3) {
             throw new WaitingException("Waiting list is full");
         }
