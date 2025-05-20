@@ -22,7 +22,7 @@ public class NcpObjectStorageService {
 
     public String uploadImage(MultipartFile file) throws IOException {
         String datePath = LocalDate.now().toString();
-        String key = "lost-items/" + datePath + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String key = "lost-items/" + datePath + "/" + UUID.randomUUID();
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(properties.getBucket())
