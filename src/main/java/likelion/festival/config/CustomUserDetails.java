@@ -1,6 +1,7 @@
 package likelion.festival.config;
 
 import likelion.festival.domain.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
+    @Getter
     private final User user;
     private final List<GrantedAuthority> authorities;
 

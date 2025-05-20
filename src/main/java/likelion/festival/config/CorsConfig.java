@@ -13,7 +13,8 @@ public class CorsConfig {
     public static CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(Arrays.asList("https://spring-festival-testing.vercel.app", "http://localhost:8080", "https://spring-festival-admin.vercel.app"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("https://spring-festival-testing.vercel.app", "https://spring-festival-admin.vercel.app"));
+
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
         allowedHttpMethods.add("GET");
         allowedHttpMethods.add("POST");
@@ -23,7 +24,6 @@ public class CorsConfig {
         configuration.setAllowedMethods(allowedHttpMethods);
 
         configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

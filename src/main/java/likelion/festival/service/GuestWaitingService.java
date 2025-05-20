@@ -3,6 +3,7 @@ package likelion.festival.service;
 import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.GuestWaiting;
 import likelion.festival.domain.Pub;
+import likelion.festival.domain.User;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
 import likelion.festival.exceptions.AdminPermissionException;
@@ -24,9 +25,8 @@ public class GuestWaitingService {
     private final PubService pubService;
 
     @Transactional
-    public GuestWaiting addGuestWaiting(GuestWaitingRequestDto guestWaitingRequestDto, String pubName) {
-
-        Pub pub = pubService.getPubByName(pubName);
+    public GuestWaiting addGuestWaiting(GuestWaitingRequestDto guestWaitingRequestDto, User user) {
+        Pub pub = pubService.getPubByName(user.getEmail());
 
         return guestWaitingRepository.save(
                 new GuestWaiting(guestWaitingRequestDto.getVisitorCount(),

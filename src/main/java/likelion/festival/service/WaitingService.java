@@ -88,7 +88,7 @@ public class WaitingService {
         long aheadCount = calculateAheadCount(waiting.getCreatedAt(), pub);
 
         return MyWaitingList.builder()
-                .waitingId(waiting.getId())
+                .waitingNum(waiting.getWaitingNum())
                 .wholeWaitingNum(totalTeams)
                 .numsTeamsAhead((int) aheadCount)
                 .pubId(pub.getId())
@@ -105,7 +105,7 @@ public class WaitingService {
                 .filter(gw -> gw.getCreatedAt().isBefore(targetTime))
                 .count();
 
-        return waitingCount + guestCount;
+        return waitingCount + guestCount + 1;
     }
 
     public List<AdminWaitingList> getAdminWaitingList(Long pubId) {

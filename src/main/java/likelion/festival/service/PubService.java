@@ -28,9 +28,7 @@ public class PubService {
     }
 
     public List<PubResponseDto> getPubRanks() {
-        List<Pub> pubs = pubRepository.findAllByOrderByLikeCountDesc();
-        return pubs.stream().map(pub -> new PubResponseDto(pub))
-                .toList();
+        return pubRepository.findAllByOrderByLikeCountDesc();
     }
 
     @Transactional

@@ -11,6 +11,7 @@ import likelion.festival.domain.Waiting;
 import likelion.festival.dto.AdminDeleteDto;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.FcmTokenRequest;
+import likelion.festival.enums.RoleType;
 import likelion.festival.exceptions.AdminPermissionException;
 import likelion.festival.exceptions.EntityNotFoundException;
 import likelion.festival.exceptions.InvalidRequestException;
@@ -35,8 +36,8 @@ public class AdminService {
     private final WaitingRepository waitingRepository;
     private final PubService pubService;
 
-    public List<AdminWaitingList> getWaitingList(String pubName) {;
-        Pub pub = pubService.getPubByName(pubName);
+    public List<AdminWaitingList> getWaitingList(User user) {
+        Pub pub = pubService.getPubByName(user.getEmail());
 
         List<AdminWaitingList> adminWaitingList = new ArrayList<>();
         adminWaitingList.addAll(waitingService.getAdminWaitingList(pub.getId()));
@@ -71,11 +72,8 @@ public class AdminService {
     @Transactional
     public String deleteWaitingAndReturnFcmToken(Long waitingId) {
         Waiting waiting = waitingService.getWaiting(waitingId);
-
-        pubService.updateEnterNum(waiting.getWaitingNum(), waiting.getPub().getId());
-
-        waitingRepository.delete(waiting);
         User user = waiting.getUser();
+        waitingRepository.delete(waiting);
         return user.getFcmToken();
     }
 

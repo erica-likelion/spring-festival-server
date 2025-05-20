@@ -1,6 +1,7 @@
 package likelion.festival.controller;
 
 import jakarta.validation.Valid;
+import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.User;
 import likelion.festival.domain.Waiting;
 import likelion.festival.dto.FcmTokenRequest;
@@ -8,6 +9,7 @@ import likelion.festival.dto.WaitingAlarmRequest;
 import likelion.festival.service.FCMService;
 import likelion.festival.service.WaitingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class FCMController {
     private final FCMService fcmService;
 
-    @PostMapping("{userId}/fcm/token")
-    public String getFcmToken(@PathVariable Long userId, @Valid @RequestBody FcmTokenRequest fcmTokenRequest) {
-        fcmService.saveUserFcmToken(userId, fcmTokenRequest.getToken());
+    @PostMapping("/fcm/token")
+    public String getFcmToken(@Valid @RequestBody FcmTokenRequest fcmTokenRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+
+        fcmService.saveUserFcmToken(user, fcmTokenRequest.getToken());
         return "Save FCM Token Successfully";
     }
 

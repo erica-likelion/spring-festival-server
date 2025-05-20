@@ -23,9 +23,7 @@ public class FCMService {
     private final WaitingService waitingService;
 
     @Transactional
-    public void saveUserFcmToken(Long userId, String fcmToken) {
-        User user = userService.getUserById(userId);
-
+    public void saveUserFcmToken(User user, String fcmToken) {
         user.updateFcmToken(fcmToken);
     }
 

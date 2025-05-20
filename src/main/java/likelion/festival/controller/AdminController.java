@@ -1,18 +1,14 @@
 package likelion.festival.controller;
 
 import jakarta.validation.Valid;
-import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.GuestWaiting;
 import likelion.festival.dto.AdminDeleteDto;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
 import likelion.festival.dto.GuestWaitingResponseDto;
-import likelion.festival.exceptions.AdminPermissionException;
 import likelion.festival.service.AdminService;
 import likelion.festival.service.GuestWaitingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,33 +33,20 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<AdminWaitingList> getWaitingList() {
-        CustomUserDetails userDetails = getRequestUser();
-        validateAdminUser(userDetails);
-        String pubName = userDetails.getUsername();
-        return adminService.getWaitingList(pubName);
+    public List<AdminWaitingList> getWaitingList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+
+        if (user.getRole() != RoleType.ROLE_ADMIN) {
+            throw new AdminPermissionException("관리자 권한이 없습니다. 관리자 계정으로 로그인해주세요.");
+        }
+
+        return adminService.getWaitingList(user);
     }
 
     @PostMapping
     public GuestWaitingResponseDto addGuestWaiting(@Valid @RequestBody GuestWaitingRequestDto guestWaitingRequestDto) {
-        CustomUserDetails userDetails = getRequestUser();
-        validateAdminUser(userDetails);
-        String pubName = userDetails.getUsername();
-        GuestWaiting guestWaiting = guestWaitingService.addGuestWaiting(guestWaitingRequestDto, pubName);
+        GuestWaiting guestWaiting = guestWaitingService.addGuestWaiting(guestWaitingRequestDto);
 
         return new GuestWaitingResponseDto(guestWaiting);
-    }
-
-    private CustomUserDetails getRequestUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (CustomUserDetails) authentication.getPrincipal();
-    }
-
-    private void validateAdminUser(CustomUserDetails userDetails) {
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-        if (!isAdmin) {
-            throw new AdminPermissionException("관리자 권한이 없습니다. 관리자 계정으로 로그인해주세요.");
-        }
     }
 }
