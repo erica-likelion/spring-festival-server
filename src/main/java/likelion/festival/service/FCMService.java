@@ -18,13 +18,13 @@ import java.util.List;
 @Transactional(readOnly=true)
 @RequiredArgsConstructor
 public class FCMService {
-    private final UserService userService;
     private final UserRepository userRepository;
     private final WaitingService waitingService;
 
     @Transactional
     public void saveUserFcmToken(User user, String fcmToken) {
         user.updateFcmToken(fcmToken);
+        userRepository.save(user);
     }
 
     public User getUserByWaitingId(Long waitingId, String type) {

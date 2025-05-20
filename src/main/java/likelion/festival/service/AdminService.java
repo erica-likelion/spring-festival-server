@@ -50,7 +50,10 @@ public class AdminService {
     @Transactional
     public void completeWaiting(AdminDeleteDto adminDeleteDto) {
         if (adminDeleteDto.getType().equals("Online")) {
-            sendCompleteWaitingMessage(deleteWaitingAndReturnFcmToken(adminDeleteDto.getId()));
+            String fcmToken = deleteWaitingAndReturnFcmToken(adminDeleteDto.getId());
+            if (fcmToken != null) {
+                sendCompleteWaitingMessage(fcmToken);
+            }
         } else if (adminDeleteDto.getType().equals("WalkIn")) {
             guestWaitingService.deleteGuestWaiting(adminDeleteDto.getId());
         } else {
@@ -61,7 +64,10 @@ public class AdminService {
     @Transactional
     public void deleteWaiting(AdminDeleteDto adminDeleteDto) {
         if (adminDeleteDto.getType().equals("Online")) {
-            sendDeletedWaitingMessage(deleteWaitingAndReturnFcmToken(adminDeleteDto.getId()));
+            String fcmToken = deleteWaitingAndReturnFcmToken(adminDeleteDto.getId());
+            if (fcmToken != null) {
+                sendDeletedWaitingMessage(fcmToken);
+            }
         } else if (adminDeleteDto.getType().equals("WalkIn")) {
             guestWaitingService.deleteGuestWaiting(adminDeleteDto.getId());
         } else {
