@@ -32,6 +32,7 @@ public class WaitingService {
     private final WaitingRepository waitingRepository;
     private final PubService pubService;
     private final PubRepository pubRepository;
+
     @Transactional
     public WaitingResponseDto addWaiting(User user, WaitingRequestDto waitingRequestDto){
         List<Waiting> waitingList = user.getWaitingList();
@@ -64,13 +65,17 @@ public class WaitingService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 웨이팅이 존재하지 않습니다: " + waitingId));
     }
 
+    // 사용자가 직접 삭제
     @Transactional
     public void deleteWaiting(Long waitingId) {
-//        if (!waitingRepository.existsById(waitingId)) {
-//            throw new EntityNotFoundException("해당 id를 가진 웨이팅이 존재하지 않습니다: " + waitingId);
-//        }
-//        waitingRepository.deleteById(waitingId);
         Waiting waiting = getWaiting(waitingId);
+        waitingRepository.delete(waiting);
+    }
+
+    // 관리자에서 노쇼, 입장으로 웨이팅을 삭제하는 경우
+    @Transactional
+    public void deleteWaiting(Waiting waiting) {
+        pubService.updateEnterNum(waiting.getWaitingNum(), waiting.getPub().getId());
         waitingRepository.delete(waiting);
     }
 
