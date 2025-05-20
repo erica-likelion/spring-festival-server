@@ -1,14 +1,19 @@
 package likelion.festival.controller;
 
 import jakarta.validation.Valid;
+import likelion.festival.config.CustomUserDetails;
 import likelion.festival.domain.GuestWaiting;
+import likelion.festival.domain.User;
 import likelion.festival.dto.AdminDeleteDto;
 import likelion.festival.dto.AdminWaitingList;
 import likelion.festival.dto.GuestWaitingRequestDto;
 import likelion.festival.dto.GuestWaitingResponseDto;
+import likelion.festival.enums.RoleType;
+import likelion.festival.exceptions.AdminPermissionException;
 import likelion.festival.service.AdminService;
 import likelion.festival.service.GuestWaitingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,9 +49,14 @@ public class AdminController {
     }
 
     @PostMapping
-    public GuestWaitingResponseDto addGuestWaiting(@Valid @RequestBody GuestWaitingRequestDto guestWaitingRequestDto) {
-        GuestWaiting guestWaiting = guestWaitingService.addGuestWaiting(guestWaitingRequestDto);
+    public GuestWaitingResponseDto addGuestWaiting(@Valid @RequestBody GuestWaitingRequestDto guestWaitingRequestDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
 
+        if (user.getRole() != RoleType.ROLE_ADMIN) {
+            throw new AdminPermissionException("관리자 계정만 현장 예약을 추가할 수 있습니다.");
+        }
+
+        GuestWaiting guestWaiting = guestWaitingService.addGuestWaiting(guestWaitingRequestDto, user);
         return new GuestWaitingResponseDto(guestWaiting);
     }
 }
