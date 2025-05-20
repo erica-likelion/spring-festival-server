@@ -20,7 +20,6 @@ public class Waiting {
 
     private String phoneNumber;
 
-    private String pubName;
 
     private Integer waitingNum;
 
@@ -32,10 +31,9 @@ public class Waiting {
     @JoinColumn(name = "pub_id")
     private Pub pub;
 
-    public Waiting(Integer visitorCount, String phoneNumber, String pubName, Integer waitingNum, User user, Pub pub) {
+    public Waiting(Integer visitorCount, String phoneNumber, Integer waitingNum, User user, Pub pub) {
         this.visitorCount = visitorCount;
         this.phoneNumber = phoneNumber;
-        this.pubName = pubName;
         this.waitingNum = waitingNum;
         this.createdAt = LocalDateTime.now();
         this.user = user;

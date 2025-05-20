@@ -37,4 +37,9 @@ public class PubService {
                 .orElseThrow(() -> new EntityNotFoundException("요청한 id를 가진 주점을 찾을 수 없습니다: " + pubId));
         pub.addLikeCount(addCount);
     }
+
+    @Transactional
+    public void updateEnterNum(Integer waitingNum, Long pubId) {
+        pubRepository.incrementEnterNum(waitingNum, pubId);
+    }
 }

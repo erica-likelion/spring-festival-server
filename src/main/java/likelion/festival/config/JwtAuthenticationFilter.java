@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.festival.exceptions.JwtAuthenticationException;
+import likelion.festival.exceptions.JwtExpiredException;
 import likelion.festival.exceptions.JwtTokenException;
 import likelion.festival.exceptions.UserNotFoundException;
 import likelion.festival.utils.JwtTokenUtils;
@@ -61,6 +62,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(ex.getMessage());
             return; // 없으면 인증되지 않아도 controller 과정으로 넘어가게 됨
+        } catch (JwtExpiredException ex) {
+            SecurityContextHolder.clearContext();
+            response.setContentType("application/json; charset=UTF-8");
+            response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+            response.getWriter().write(ex.getMessage());
+            return;
         }
     }
 
