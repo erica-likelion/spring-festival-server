@@ -36,7 +36,7 @@ public class FCMService {
     }
 
     public void sendAllUserConcertAlarm(String artistName) {
-        List<String> fcmTokenList = userRepository.findAllFcmTokens();
+        List<String> fcmTokenList = userRepository.findAllFcmTokensByArtistName(artistName);
         fcmTokenList.forEach(token -> {
             sendFcmMessage(token,
                     "한양대 에리카 봄 축제",
