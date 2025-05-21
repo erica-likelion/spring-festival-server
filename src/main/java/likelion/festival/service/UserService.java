@@ -1,9 +1,11 @@
 package likelion.festival.service;
 
+import likelion.festival.domain.ConcertAlarmRequest;
 import likelion.festival.domain.User;
 import likelion.festival.enums.RoleType;
 import likelion.festival.exceptions.JwtTokenException;
 import likelion.festival.exceptions.UserNotFoundException;
+import likelion.festival.repository.ConcertAlarmRequestRepository;
 import likelion.festival.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ConcertAlarmRequestRepository concertAlarmRequestRepository;
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
@@ -33,6 +36,11 @@ public class UserService {
                         .role(RoleType.ROLE_USER)
                         .build()
         );
+    }
+
+    @Transactional
+    public void setUserConcertAlarm(User user, String concertName) {
+        concertAlarmRequestRepository.save(new ConcertAlarmRequest(concertName, user));
     }
 
     public User getUserByRefreshToken(String refreshToken) {

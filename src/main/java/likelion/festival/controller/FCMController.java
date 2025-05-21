@@ -7,6 +7,7 @@ import likelion.festival.domain.Waiting;
 import likelion.festival.dto.FcmTokenRequest;
 import likelion.festival.dto.WaitingAlarmRequest;
 import likelion.festival.service.FCMService;
+import likelion.festival.service.UserService;
 import likelion.festival.service.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FCMController {
     private final FCMService fcmService;
+    private final UserService userService;
 
     @PostMapping("/fcm/token")
     public String getFcmToken(@Valid @RequestBody FcmTokenRequest fcmTokenRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -39,5 +41,11 @@ public class FCMController {
     public String sendConcertAlarm(@RequestParam String artistName) {
         fcmService.sendAllUserConcertAlarm(artistName);
         return "Send FCM Message Successfully";
+    }
+
+    @PostMapping("/concert/{concertName}/alarm")
+    public String setConcertAlarmRequest(@PathVariable String concertName, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.setUserConcertAlarm(userDetails.getUser(), concertName);
+        return "Set Concert Alarm Successfully";
     }
 }
