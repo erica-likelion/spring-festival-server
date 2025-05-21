@@ -33,10 +33,13 @@ public class PubController {
         return ResponseEntity.ok(pubs);
     }
 
-    @GetMapping("/{pubId}/waiting-count")
-    public ResponseEntity<PubTotalWaitingResponse> getPubTotalWaitingCount(@PathVariable Long pubId) {
-        Integer totalCount = pubService.getTotalWaiting(pubId);
-        PubTotalWaitingResponse response = new PubTotalWaitingResponse(totalCount);
+    @GetMapping("/waiting-count")
+    public ResponseEntity<List<PubTotalWaitingResponse>> getPubTotalWaitingCount() {
+        List<Pub> pubs = pubService.getAllPubs();
+        List<PubTotalWaitingResponse> response =  pubs.stream().map(pub -> new PubTotalWaitingResponse(
+                pub.getId(),
+                pubService.getTotalWaiting(pub.getId())
+        )).toList();
         return ResponseEntity.ok(response);
     }
 }
