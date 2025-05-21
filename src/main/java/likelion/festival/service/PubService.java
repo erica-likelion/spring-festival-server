@@ -44,7 +44,8 @@ public class PubService {
     }
 
     public Integer getTotalWaiting(Long pubId) {
-        Pub pub = pubRepository.findPubWithWaitingsAndGuestWaitings(pubId);
+        Pub pub = pubRepository.findPubWithWaitingsAndGuestWaitings(pubId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 주점이 존재하지 않습니다. " + pubId));
         return pub.getGuestWaitingList().size() + pub.getWaitingList().size();
     }
 }
