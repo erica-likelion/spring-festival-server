@@ -1,8 +1,10 @@
 package likelion.festival.domain;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 public class ConcertAlarmRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

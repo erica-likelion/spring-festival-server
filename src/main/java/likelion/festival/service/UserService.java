@@ -39,8 +39,8 @@ public class UserService {
     }
 
     @Transactional
-    public void setUserConcertAlarm(User user, String concertName) {
-        concertAlarmRequestRepository.save(new ConcertAlarmRequest(concertName, user));
+    public void setUserConcertAlarm(User user, String artistName) {
+        concertAlarmRequestRepository.save(new ConcertAlarmRequest(artistName, user));
     }
 
     public User getUserByRefreshToken(String refreshToken) {
