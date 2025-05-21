@@ -15,6 +15,7 @@ import likelion.festival.repository.GuestWaitingRepository;
 import likelion.festival.repository.PubRepository;
 import likelion.festival.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.metamodel.mapping.EntityIdentifierMapping;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +86,9 @@ public class WaitingService {
     }
 
     private MyWaitingList convertToDto(Waiting waiting) {
-        Pub pub = pubRepository.findPubWithWaitingsAndGuestWaitings(waiting.getPub().getId());
+        Long pubId = waiting.getPub().getId();
+        Pub pub = pubRepository.findPubWithWaitingsAndGuestWaitings(pubId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 주점이 존재하지 않습니다." + pubId));
         Set<Waiting> pubWaitings = pub.getWaitingList();
         Set<GuestWaiting> pubGuestWaitings = pub.getGuestWaitingList();
 

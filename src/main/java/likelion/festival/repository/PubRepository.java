@@ -14,6 +14,9 @@ public interface PubRepository extends JpaRepository<Pub, Long> {
     @Query("SELECT new likelion.festival.dto.PubResponseDto(p.id, p.name ,p.likeCount) FROM Pub p ORDER BY p.likeCount DESC")
     List<PubResponseDto> findAllByOrderByLikeCountDesc();
 
+    @Query("SELECT new likelion.festival.dto.PubResponseDto(p.id, p.name, p.likeCount) FROM Pub p ORDER BY p.id")
+    List<PubResponseDto> findAllOrderById();
+
     Optional<Pub> findByName(String name);
 
     @Query("""
@@ -22,7 +25,7 @@ public interface PubRepository extends JpaRepository<Pub, Long> {
     LEFT JOIN FETCH p.guestWaitingList g
     WHERE p.id = :pubId
 """)
-    Pub findPubWithWaitingsAndGuestWaitings(Long pubId);
+    Optional<Pub> findPubWithWaitingsAndGuestWaitings(Long pubId);
 
     @Modifying
     @Query("UPDATE Pub p SET p.enterNum = :waitingNum WHERE p.id = :pubId")
