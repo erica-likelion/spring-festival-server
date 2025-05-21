@@ -28,7 +28,7 @@ public class PubService {
     }
 
     public List<PubResponseDto> getPubRanks() {
-        return pubRepository.findAllByOrderByLikeCountDesc();
+        return pubRepository.findAllOrderById();
     }
 
     @Transactional

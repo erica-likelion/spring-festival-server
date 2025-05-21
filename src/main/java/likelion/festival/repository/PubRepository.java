@@ -14,6 +14,9 @@ public interface PubRepository extends JpaRepository<Pub, Long> {
     @Query("SELECT new likelion.festival.dto.PubResponseDto(p.id, p.name ,p.likeCount) FROM Pub p ORDER BY p.likeCount DESC")
     List<PubResponseDto> findAllByOrderByLikeCountDesc();
 
+    @Query("SELECT new likelion.festival.dto.PubResponseDto(p.id, p.name, p.likeCount) FROM Pub p ORDER BY p.id")
+    List<PubResponseDto> findAllOrderById();
+
     Optional<Pub> findByName(String name);
 
     @Query("""
