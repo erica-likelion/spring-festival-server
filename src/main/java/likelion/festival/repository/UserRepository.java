@@ -20,4 +20,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     AND c.artistName = :artistName
 """)
     List<String> findAllFcmTokensByArtistName(@Param("artistName") String artistName);
+
+    @Query("""
+    SELECT u.fcmToken 
+    FROM User u
+    WHERE u.fcmToken IS NOT NULL
+""")
+    List<String> findAllFcmTokens();
 }
