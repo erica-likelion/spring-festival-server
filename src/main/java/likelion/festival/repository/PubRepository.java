@@ -22,7 +22,7 @@ public interface PubRepository extends JpaRepository<Pub, Long> {
     LEFT JOIN FETCH p.guestWaitingList g
     WHERE p.id = :pubId
 """)
-    Pub findPubWithWaitingsAndGuestWaitings(Long pubId);
+    Optional<Pub> findPubWithWaitingsAndGuestWaitings(Long pubId);
 
     @Modifying
     @Query("UPDATE Pub p SET p.enterNum = :waitingNum WHERE p.id = :pubId")
