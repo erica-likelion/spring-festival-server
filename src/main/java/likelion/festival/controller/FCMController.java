@@ -43,9 +43,9 @@ public class FCMController {
         return "Send FCM Message Successfully";
     }
 
-    @PostMapping("/concert/{concertName}/alarm")
-    public String setConcertAlarmRequest(@PathVariable String concertName, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        userService.setUserConcertAlarm(userDetails.getUser(), concertName);
+    @PostMapping("/concert/{artistName}/alarm")
+    public String setConcertAlarmRequest(@PathVariable String artistName, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.setUserConcertAlarm(userDetails.getUser(), artistName);
         return "Set Concert Alarm Successfully";
     }
 }
