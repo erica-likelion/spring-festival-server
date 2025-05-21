@@ -26,7 +26,7 @@ public class SecurityConfig {
             new WhitelistEntry(HttpMethod.POST, "/auth/refresh"),
             new WhitelistEntry(HttpMethod.POST, "/auth/admin-login"),
             new WhitelistEntry(HttpMethod.GET, "/api/lost-items/**"),
-            new WhitelistEntry(HttpMethod.GET, "/api/pubs"),
+            new WhitelistEntry(HttpMethod.GET, "/api/pubs/**"),
             new WhitelistEntry(HttpMethod.POST, "/api/pubs/like"),
             new WhitelistEntry(HttpMethod.GET, "/images/**")
     );
