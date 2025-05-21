@@ -31,6 +31,10 @@ public class PubService {
         return pubRepository.findAllOrderById();
     }
 
+    public List<Pub> getAllPubs() {
+        return pubRepository.findAll();
+    }
+
     @Transactional
     public void addPubLike(Long pubId, Integer addCount) {
         Pub pub = pubRepository.findById(pubId)
