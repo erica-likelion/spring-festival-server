@@ -24,7 +24,7 @@ public class PubOpenAlarmService {
             fcmService.sendFcmMessage(
                     token,
                     "한양대 에리카 봄 축제",
-                    "주점들이 오픈했습니다! 저희 어플에서 메뉴판과 웨이팅까지 이용해보세요!"
+                    "주점들이 오픈했습니다! 테스트용 주점 알림입니다"
             );
         }
     }
