@@ -48,4 +48,10 @@ public class FCMController {
         userService.setUserConcertAlarm(userDetails.getUser(), artistName);
         return "Set Concert Alarm Successfully";
     }
+
+    @DeleteMapping("/concert/{artistName}/alarm")
+    public String deleteConcertAlarmRequest(@PathVariable String artistName, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.deleteUserConcertAlarm(userDetails.getUser(), artistName);
+        return "Delete Concert Alarm Successfully";
+    }
 }

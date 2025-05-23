@@ -3,6 +3,7 @@ package likelion.festival.service;
 import likelion.festival.domain.ConcertAlarmRequest;
 import likelion.festival.domain.User;
 import likelion.festival.enums.RoleType;
+import likelion.festival.exceptions.EntityNotFoundException;
 import likelion.festival.exceptions.JwtTokenException;
 import likelion.festival.exceptions.UserNotFoundException;
 import likelion.festival.repository.ConcertAlarmRequestRepository;
@@ -41,6 +42,14 @@ public class UserService {
     @Transactional
     public void setUserConcertAlarm(User user, String artistName) {
         concertAlarmRequestRepository.save(new ConcertAlarmRequest(artistName, user));
+    }
+
+    @Transactional
+    public void deleteUserConcertAlarm(User user, String artistName) {
+        ConcertAlarmRequest concertAlarmRequest = concertAlarmRequestRepository.findByArtistNameAndUser(artistName, user).orElseThrow(
+                () -> new EntityNotFoundException("Cannot find concert alarm request with given artistName:" + artistName));
+
+        concertAlarmRequestRepository.delete(concertAlarmRequest);
     }
 
     public User getUserByRefreshToken(String refreshToken) {
