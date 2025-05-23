@@ -17,7 +17,7 @@ public class CorsConfig {
     public static CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(Arrays.asList("https://spring-festival-testing.vercel.app", "https://spring-festival-admin.vercel.app", "http://localhost:8080"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("https://likelion-espero.vercel.app/", "https://likelion-espero-admin.vercel.app/", "http://localhost:8080"));
 
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
         allowedHttpMethods.add("GET");
