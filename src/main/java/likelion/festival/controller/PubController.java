@@ -1,7 +1,9 @@
 package likelion.festival.controller;
 
+import likelion.festival.domain.Pub;
 import likelion.festival.dto.PubRequestDto;
 import likelion.festival.dto.PubResponseDto;
+import likelion.festival.dto.PubTotalWaitingResponse;
 import likelion.festival.service.PubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +31,15 @@ public class PubController {
         }
         List<PubResponseDto> pubs = pubService.getPubRanks();
         return ResponseEntity.ok(pubs);
+    }
+
+    @GetMapping("/waiting-count")
+    public ResponseEntity<List<PubTotalWaitingResponse>> getPubTotalWaitingCount() {
+        List<Pub> pubs = pubService.getAllPubs();
+        List<PubTotalWaitingResponse> response =  pubs.stream().map(pub -> new PubTotalWaitingResponse(
+                pub.getId(),
+                pubService.getTotalWaiting(pub.getId())
+        )).toList();
+        return ResponseEntity.ok(response);
     }
 }

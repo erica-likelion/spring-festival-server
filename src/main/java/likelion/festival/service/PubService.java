@@ -28,7 +28,11 @@ public class PubService {
     }
 
     public List<PubResponseDto> getPubRanks() {
-        return pubRepository.findAllByOrderByLikeCountDesc();
+        return pubRepository.findAllOrderById();
+    }
+
+    public List<Pub> getAllPubs() {
+        return pubRepository.findAll();
     }
 
     @Transactional
@@ -41,5 +45,11 @@ public class PubService {
     @Transactional
     public void updateEnterNum(Integer waitingNum, Long pubId) {
         pubRepository.incrementEnterNum(waitingNum, pubId);
+    }
+
+    public Integer getTotalWaiting(Long pubId) {
+        Pub pub = pubRepository.findPubWithWaitingsAndGuestWaitings(pubId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 주점이 존재하지 않습니다. " + pubId));
+        return pub.getGuestWaitingList().size() + pub.getWaitingList().size();
     }
 }
