@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class MyWaitingList {
+    private Long waitingId;
     private Integer waitingNum;
     private Integer wholeWaitingNum;
     private Integer numsTeamsAhead;
