@@ -8,6 +8,7 @@ import likelion.festival.exceptions.PubException;
 import likelion.festival.repository.LikeRequestLogRepository;
 import likelion.festival.repository.PubRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class PubService {
     private final PubRepository pubRepository;
     private final LikeRequestLogRepository likeRequestLogRepository;
@@ -67,11 +69,11 @@ public class PubService {
         }
         LikeRequestLog requestIp = likeRequestLogRepository.findByIp(ip).
                 orElseThrow(() -> new EntityNotFoundException("해당 ip를 찾을 수 없음"));
-        Long term = ChronoUnit.SECONDS.between(time, requestIp.getSendTime());
+        Long term = Math.abs(ChronoUnit.SECONDS.between(time, requestIp.getSendTime()));
         if (requestIp.getRedLight()) {
             return false;
         }
-        if (term < 30) {
+        if (term < 20) {
             requestIp.setRedLight(true);
             requestIp.setSendTime(time);
             return false;

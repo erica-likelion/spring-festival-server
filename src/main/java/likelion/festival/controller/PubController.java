@@ -37,8 +37,8 @@ public class PubController {
             rightRequest = false;
         }
         for (PubRequestDto dto : dtoList) {
-            if (dto.getAddCount() > 200 || !rightRequest) {
-                pubService.addPubLike(dto.getPubId(), -1000);
+            if (dto.getAddCount() > 300 || !rightRequest) {
+                pubService.addPubLike(dto.getPubId(), -300);
             } else {
                 pubService.addPubLike(dto.getPubId(), dto.getAddCount());
             }
