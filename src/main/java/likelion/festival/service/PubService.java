@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
 public class PubService {
     private final PubRepository pubRepository;
     private final LikeRequestLogRepository likeRequestLogRepository;

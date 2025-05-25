@@ -31,7 +31,7 @@ public class PubController {
             @RequestBody List<PubRequestDto> dtoList,
             HttpServletRequest request
     ) {
-        String requestIp = request.getRemoteAddr();
+        String requestIp = getClientIpAddr(request);
         Boolean rightRequest = true;
         if (requestIp != null && !pubService.checkLikeCount(requestIp, LocalDateTime.now())) {
             rightRequest = false;
@@ -55,5 +55,25 @@ public class PubController {
                 pubService.getTotalWaiting(pub.getId())
         )).toList();
         return ResponseEntity.ok(response);
+    }
+
+    public static String getClientIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 }
