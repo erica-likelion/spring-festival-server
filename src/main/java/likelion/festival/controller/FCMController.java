@@ -10,6 +10,8 @@ import likelion.festival.service.FCMService;
 import likelion.festival.service.UserService;
 import likelion.festival.service.WaitingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +30,17 @@ public class FCMController {
     }
 
     @PostMapping("/waiting/alarm")
-    public String sendWaitingAlert(@Valid @RequestBody WaitingAlarmRequest waitingAlarmRequest) {
+    public ResponseEntity<String> sendWaitingAlert(@Valid @RequestBody WaitingAlarmRequest waitingAlarmRequest) {
         User user = fcmService.getUserByWaitingId(waitingAlarmRequest.getWaitingId(), waitingAlarmRequest.getType());
 
-        fcmService.sendFcmMessage(user.getFcmToken(),
-                "한양대 에리카 봄 축제",
-                waitingAlarmRequest.getPubName() + "의 웨이팅이 얼마 남지 않았습니다. 근처에서 기다려주세요!");
-        return "Send FCM Message Successfully";
+        if (user.getFcmToken() != null) {
+            fcmService.sendFcmMessage(user.getFcmToken(),
+                    "한양대 에리카 봄 축제",
+                    waitingAlarmRequest.getPubName() + "의 웨이팅이 얼마 남지 않았습니다. 근처에서 기다려주세요!");
+            return ResponseEntity.ok("Send FCM Message Successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("유저의 FCM 토큰이 없습니다.");
     }
 
     @PostMapping("/concert/alarm")

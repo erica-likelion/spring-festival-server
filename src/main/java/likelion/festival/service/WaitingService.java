@@ -96,6 +96,7 @@ public class WaitingService {
         long aheadCount = calculateAheadCount(waiting.getCreatedAt(), pub);
 
         return MyWaitingList.builder()
+                .waitingId(waiting.getId())
                 .waitingNum(waiting.getWaitingNum())
                 .wholeWaitingNum(totalTeams)
                 .numsTeamsAhead((int) aheadCount)
