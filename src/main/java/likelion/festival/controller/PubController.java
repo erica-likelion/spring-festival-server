@@ -1,5 +1,6 @@
 package likelion.festival.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import likelion.festival.domain.Pub;
 import likelion.festival.dto.PubRequestDto;
 import likelion.festival.dto.PubResponseDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -25,12 +27,21 @@ public class PubController {
     }
 
     @PostMapping("/like")
-    public synchronized ResponseEntity<List<PubResponseDto>> addLike(@RequestBody List<PubRequestDto> dtoList) {
+    public synchronized ResponseEntity<List<PubResponseDto>> addLike(
+            @RequestBody List<PubRequestDto> dtoList,
+            HttpServletRequest request
+    ) {
+        String requestIp = request.getRemoteAddr();
+        Boolean rightRequest = true;
+        if (requestIp != null && !pubService.checkLikeCount(requestIp, LocalDateTime.now())) {
+            rightRequest = false;
+        }
         for (PubRequestDto dto : dtoList) {
-            if (dto.getAddCount() > 200) {
-                continue;
+            if (dto.getAddCount() > 200 || !rightRequest) {
+                pubService.addPubLike(dto.getPubId(), -1000);
+            } else {
+                pubService.addPubLike(dto.getPubId(), dto.getAddCount());
             }
-            pubService.addPubLike(dto.getPubId(), dto.getAddCount());
         }
         List<PubResponseDto> pubs = pubService.getPubRanks();
         return ResponseEntity.ok(pubs);
