@@ -27,7 +27,7 @@ public class PubController {
     @PostMapping("/like")
     public synchronized ResponseEntity<List<PubResponseDto>> addLike(@RequestBody List<PubRequestDto> dtoList) {
         for (PubRequestDto dto : dtoList) {
-            if (dto.getAddCount() > 1000) {
+            if (dto.getAddCount() > 200) {
                 continue;
             }
             pubService.addPubLike(dto.getPubId(), dto.getAddCount());
