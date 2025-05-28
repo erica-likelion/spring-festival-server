@@ -38,7 +38,7 @@ public class PubController {
         }
         for (PubRequestDto dto : dtoList) {
                 if (!rightRequest) {
-                    pubService.addPubLike(dto.getPubId(), -10);
+                    pubService.addPubLike(dto.getPubId(), -1);
                 }
                 pubService.addPubLike(dto.getPubId(), dto.getAddCount());
         }
