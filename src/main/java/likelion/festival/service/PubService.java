@@ -69,7 +69,7 @@ public class PubService {
         LikeRequestLog requestIp = likeRequestLogRepository.findByIp(ip).
                 orElseThrow(() -> new EntityNotFoundException("해당 ip를 찾을 수 없음"));
         Long term = Math.abs(ChronoUnit.SECONDS.between(time, requestIp.getSendTime()));
-        if (term < 5) {
+        if (term < 3) {
             requestIp.setSendTime(time);
             return false;
         }
