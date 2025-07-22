@@ -23,6 +23,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class LostItemService {
+
     private final LostItemRepository lostItemRepository;
     private final NcpObjectStorageService ncpObjectStorageService;
 
