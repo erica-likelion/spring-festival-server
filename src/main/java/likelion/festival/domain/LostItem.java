@@ -1,6 +1,7 @@
 package likelion.festival.domain;
 
 import jakarta.persistence.*;
+import likelion.festival.dto.LostItemRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,7 +33,17 @@ public class LostItem {
 
     private String foundTime;
 
-    // 분실물 생성 api에서 사용하는 기본 생성자
+    // dto -> entity로 변환하는 생성자
+    public LostItem(LostItemRequestDto dto) {
+        this.image = dto.image;
+        this.name = dto.name;
+        this.description = dto.description;
+        this.staffNotified = dto.staffNotified;
+        this.foundLocation = dto.foundLocation;
+        this.foundDate = dto.foundDate;
+        this.foundTime = dto.foundTime;
+    }
+
     public LostItem(
             String image,
             String name,
