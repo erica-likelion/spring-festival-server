@@ -14,7 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @AllArgsConstructor
 public class LostItemRequestDto {
-    //private MultipartFile image;
+
+    // ** 파일 형식을 받지 않고, 파일이 저장된 url을 문자열로 받아와야 합니다.
+    private String image;
+
     @NotBlank(message = "name은 필수입니다.")
     private String name;
 
@@ -32,5 +35,8 @@ public class LostItemRequestDto {
 
     @NotBlank(message = "foundTime은 필수입니다.")
     private String foundTime;
-    //private Long userId;
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
