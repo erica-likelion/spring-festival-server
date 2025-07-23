@@ -35,31 +35,12 @@ public class LostItem {
 
     // dto -> entity로 변환하는 생성자
     public LostItem(LostItemRequestDto dto) {
-        this.image = dto.image;
-        this.name = dto.name;
-        this.description = dto.description;
-        this.staffNotified = dto.staffNotified;
-        this.foundLocation = dto.foundLocation;
-        this.foundDate = dto.foundDate;
-        this.foundTime = dto.foundTime;
-    }
-
-    public LostItem(
-            String image,
-            String name,
-            String description,
-            Boolean staffNotified,
-            String foundLocation,
-            String foundDate,
-            String foundTime
-    ) {
-        this.image = image;
-        this.name = name;
-        this.description = description;
-        this.staffNotified = staffNotified;
-        this.foundLocation = foundLocation;
-        this.foundDate = foundDate;
-        this.foundTime = foundTime;
+        this.image = dto.getImage();
+        this.name = dto.getName();
+        this.description = dto.getDescription();
+        this.staffNotified = dto.getStaffNotified();
+        this.foundLocation = dto.getFoundLocation();
+        this.foundDate = dto.getFoundDate();
+        this.foundTime = dto.getFoundTime();
     }
 }
-
