@@ -18,6 +18,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 인증 관련 비즈니스 로직을 처리하는 서비스 클래스입니다.
+ *
+ * @author 김승민, 송재현
+ */
 @Service
 @Slf4j
 public class AuthService {
@@ -44,6 +49,12 @@ public class AuthService {
         this.pubRepository = pubRepository;
     }
 
+    /**
+     * 카카오 인증 코드를 이용한 로그인 및 회원가입을 처리합니다.
+     *
+     * @param code 카카오 인증 서버로부터 받은 인증 코드
+     * @param response HTTP 응답 객체 (토큰을 헤더와 쿠키에 추가하기 위해 사용)
+     */
     @Transactional
     public void doLoginProcess(String code, HttpServletResponse response) {
         String accessToken = kakaoUtils.getAccessToken(code);
@@ -61,11 +72,24 @@ public class AuthService {
         setRefreshToken(refreshToken, response);
     }
 
+    /**
+     * 이메일을 통해 사용자를 조회하고, 없으면 회원가입을 진행합니다.
+     *
+     * @param email 사용자 이메일
+     * @param name 사용자 이름
+     * @return 생성된 {@link User} 엔티티
+     */
     private User getUserIfNotExistsSignup(String email, String name) {
         return userRepository.findByEmail(email)
                 .orElseGet(() -> userService.save(email, name));
     }
 
+    /**
+     * 리프레시 토큰을 HTTP 응답 쿠키에 설정합니다.
+     *
+     * @param refreshToken 발급된 리프레시 토큰
+     * @param response HTTP 응답 객체
+     */
     private void setRefreshToken(String refreshToken, HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
