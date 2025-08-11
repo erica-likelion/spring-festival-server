@@ -1,0 +1,48 @@
+package likelion.festival.image.service;
+
+import likelion.festival.config.ncp.NcpStorageProperties;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.core.sync.RequestBody;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class NcpObjectStorageService {
+
+    private final S3Client s3Client;
+    private final NcpStorageProperties properties;
+
+    public String uploadImage(MultipartFile file) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        String datePath = LocalDate.now().toString();
+        String fileExtension;
+
+        if (originalFilename == null || !originalFilename.contains(".")) {
+            fileExtension = "";
+        } else {
+            fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".")+1);
+        }
+        String key = "lost-items/" + datePath + "/" + UUID.randomUUID() + "." + fileExtension;
+
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(properties.getBucket())
+                .key(key)
+                .contentType(file.getContentType())
+                .acl("public-read")
+                .build();
+
+        s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+        return getObjectUrl(key);
+    }
+
+    public String getObjectUrl(String objectKey) {
+        return properties.getEndpoint() + "/" + properties.getBucket() + "/" + objectKey;
+    }
+}
