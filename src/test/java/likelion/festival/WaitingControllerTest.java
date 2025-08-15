@@ -1,15 +1,15 @@
 package likelion.festival;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import likelion.festival.domain.Pub;
-import likelion.festival.domain.User;
-import likelion.festival.domain.Waiting;
-import likelion.festival.dto.WaitingRequestDto;
-import likelion.festival.enums.RoleType;
-import likelion.festival.repository.PubRepository;
-import likelion.festival.repository.UserRepository;
-import likelion.festival.repository.WaitingRepository;
-import likelion.festival.utils.JwtTokenUtils;
+import likelion.festival.pub.domain.Pub;
+import likelion.festival.user.domain.User;
+import likelion.festival.waiting.domain.Waiting;
+import likelion.festival.waiting.dto.WaitingRequestDto;
+import likelion.festival.user.enums.RoleType;
+import likelion.festival.pub.repository.PubRepository;
+import likelion.festival.user.repository.UserRepository;
+import likelion.festival.waiting.repository.WaitingRepository;
+import likelion.festival.auth.utils.JwtTokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
